@@ -1,0 +1,26 @@
+projectsEvaluated{
+    rootProject.subprojects {
+        repositories {
+            mavenCentral()
+        }
+        apply plugin: 'checkstyle'
+    
+        //CheckStyle task
+        task checkstyle(type: Checkstyle, dependsOn: [project.assembleDebug]) {
+            configFile new File(rootDir, 'checkstyle.xml')
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            include '**/*.java'
+            exclude '**/gen/**'
+            classpath = project.configurations.compile + files(project.android.bootClasspath)
+            ignoreFailures = true // Don't report error if there are bugs found.
+        }
+        // Flavourless projects need assembleDebugAndroidTest
+        // Flavoured projects need assembleAndroidTest
+        if (project.hasProperty('assembleDebugAndroidTest')) {
+            project.tasks.checkstyle.dependsOn += ['assembleDebugAndroidTest']
+        } else if (project.hasProperty('assembleAndroidTest')) {
+            project.tasks.checkstyle.dependsOn += ['assembleAndroidTest']
+        }
+        project.check.dependsOn += [project.tasks.checkstyle]
+    }
+}

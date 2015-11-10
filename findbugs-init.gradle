@@ -1,0 +1,50 @@
+
+
+projectsEvaluated{
+    rootProject.subprojects {
+        repositories {
+            mavenCentral()
+        }
+        apply plugin: 'findbugs'
+
+        //Findbugs task
+//        task findbugs(type: FindBugs, dependsOn: [project.assembleDebug]) {
+        task findbugs(type: FindBugs, dependsOn: [project.assembleRelease]) {
+            excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
+            classes = files()
+            if (android.hasProperty('applicationVariants')) {
+                project.android.applicationVariants.all { variant ->
+                    if (variant.buildType.name == "debug") {
+                        classes += files("${variant.javaCompile.destinationDir}")
+                    }
+                }
+            } else if (android.hasProperty('libraryVariants')) {
+                project.android.libraryVariants.all { variant ->
+                    if (variant.buildType.name == "debug") {
+                        classes += files("${variant.javaCompile.destinationDir}")
+                    }
+                }
+            }
+            if (android.hasProperty('testVariants')) {
+                project.android.testVariants.all { variant ->
+                    if (variant.buildType.name == "debug") {
+                        classes += files("${variant.javaCompile.destinationDir}")
+                    }
+                }
+            }
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            classpath = project.configurations.compile + files(project.android.bootClasspath)
+            effort = 'max'
+            reportLevel = "low"
+            ignoreFailures = true // Don't report error if there are bugs found.
+        }
+        // Flavourless projects need assembleDebugAndroidTest
+        // Flavoured projects need assembleAndroidTest
+        if (project.hasProperty('assembleDebugAndroidTest')) {
+            project.tasks.findbugs.dependsOn += ['assembleDebugAndroidTest']
+        } else if (project.hasProperty('assembleAndroidTest')) {
+            project.tasks.findbugs.dependsOn += ['assembleAndroidTest']
+        }
+        project.check.dependsOn += [project.tasks.findbugs]
+    }
+}
