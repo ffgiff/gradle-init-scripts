@@ -11,6 +11,7 @@ projectsEvaluated{
 //        task findbugs(type: FindBugs, dependsOn: [project.assembleDebug]) {
         task findbugs(type: FindBugs, dependsOn: [project.assembleRelease]) {
             excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
+            //excludeFilter script.file('findbugs-filter.xml')
             classes = files()
             if (android.hasProperty('applicationVariants')) {
                 project.android.applicationVariants.all { variant ->

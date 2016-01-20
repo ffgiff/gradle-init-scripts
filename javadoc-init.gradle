@@ -34,6 +34,7 @@ projectsEvaluated{
                     project.android.sdkDirectory.getAbsolutePath()
                             .replace(File.separatorChar, (char)'/')
                         + "/docs/reference")])
+            options.encoding("utf-8")
         }
     }
 }
