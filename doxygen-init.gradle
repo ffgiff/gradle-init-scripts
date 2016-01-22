@@ -1,0 +1,43 @@
+rootProject {
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath "org.ysb33r.gradle:doxygen:0.2"
+        }
+    }
+}
+
+projectsEvaluated{
+    rootProject {
+        apply plugin: "org.ysb33r.doxygen"
+
+        subprojects {
+            doxygen {
+//                dependsOn project.assembleDebug
+                dependsOn assembleRelease
+                generate_html true
+                generate_latex false
+                project_number android.defaultConfig.versionName + " (" + android.defaultConfig.versionCode + ")"
+                optimize_output_java true
+                // project_logo
+                output_directory docsDir
+                extract_all true
+                extract_private true
+                extract_package true
+                extract_static true
+                extract_anon_nspaces true
+                group_nested_compounds true
+                inline_grouped_classes true
+                inline_simple_structs true
+                have_dot true
+                call_graph true
+                caller_graph true
+                exclude '**/*.aj'
+                source = [android.sourceSets.main.java.srcDirs]
+//                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            }
+        }
+    }
+}
