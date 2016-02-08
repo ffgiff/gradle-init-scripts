@@ -8,7 +8,7 @@ projectsEvaluated{
         //CheckStyle task
         task checkstyle(type: Checkstyle, dependsOn: [project.assembleDebug]) {
             configFile new File(rootDir, 'checkstyle.xml')
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
             include '**/*.java'
             exclude '**/gen/**'
             classpath = project.configurations.compile + files(project.android.bootClasspath)
@@ -20,6 +20,11 @@ projectsEvaluated{
             project.tasks.checkstyle.dependsOn += ['assembleDebugAndroidTest']
         } else if (project.hasProperty('assembleAndroidTest')) {
             project.tasks.checkstyle.dependsOn += ['assembleAndroidTest']
+        }
+        if (project.hasProperty('assembleDebugUnitTest')) {
+            project.tasks.checkstyle.dependsOn += ['assembleDebugUnitTest']
+        } else if (project.hasProperty('assembleUnitTest')) {
+            project.tasks.checkstyle.dependsOn += ['assembleUnitTest']
         }
         project.check.dependsOn += [project.tasks.checkstyle]
     }

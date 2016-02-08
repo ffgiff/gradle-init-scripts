@@ -1,5 +1,2 @@
-apply from: 'checkstyle-init.gradle'
-apply from: 'findbugs-init.gradle'
-apply from: 'javadoc-init.gradle'
-apply from: 'pmd-init.gradle'
-apply from: 'sonar-init.gradle'
+apply from: 'documentation-init.gradle'
+apply from: 'static-checker-init.gradle'

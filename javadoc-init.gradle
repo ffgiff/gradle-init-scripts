@@ -27,7 +27,7 @@ projectsEvaluated{
 //                }
             }
             exclude '**/*.aj'
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
 //            source = [android.sourceSets.androidTest.java.srcDirs]
             options.setLinksOffline([new JavadocOfflineLink(
                     "https://developer.android.com/reference",

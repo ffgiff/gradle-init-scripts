@@ -5,7 +5,7 @@ projectsEvaluated{
         //PMD task
         task pmd(type: Pmd) {
             ruleSets = ["java-android", "java-basic", "java-braces", "java-strings"]
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
             ignoreFailures = true // Don't report error if there are bugs found.
         }
 

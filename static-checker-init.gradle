@@ -1,0 +1,4 @@
+apply from: 'checkstyle-init.gradle'
+apply from: 'findbugs-init.gradle'
+apply from: 'pmd-init.gradle'
+apply from: 'sonar-init.gradle'

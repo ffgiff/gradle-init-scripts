@@ -33,7 +33,7 @@ projectsEvaluated{
                     }
                 }
             }
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
             classpath = project.configurations.compile + files(project.android.bootClasspath)
             effort = 'max'
             reportLevel = "low"
@@ -45,6 +45,11 @@ projectsEvaluated{
             project.tasks.findbugs.dependsOn += ['assembleDebugAndroidTest']
         } else if (project.hasProperty('assembleAndroidTest')) {
             project.tasks.findbugs.dependsOn += ['assembleAndroidTest']
+        }
+        if (project.hasProperty('assembleDebugUnitTest')) {
+            project.tasks.findbugs.dependsOn += ['assembleDebugUnitTest']
+        } else if (project.hasProperty('assembleUnitTest')) {
+            project.tasks.findbugs.dependsOn += ['assembleUnitTest']
         }
         project.check.dependsOn += [project.tasks.findbugs]
     }

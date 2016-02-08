@@ -36,7 +36,7 @@ projectsEvaluated{
                 caller_graph true
                 exclude '**/*.aj'
                 source = [android.sourceSets.main.java.srcDirs]
-//                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs]
+//                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
             }
         }
     }
