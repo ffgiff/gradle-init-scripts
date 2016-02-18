@@ -10,7 +10,17 @@ projectsEvaluated{
         //Findbugs task
 //        task findbugs(type: FindBugs, dependsOn: [project.assembleDebug]) {
         task findbugs(type: FindBugs, dependsOn: [project.assembleRelease]) {
-            excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
+            // Find excludes filter
+            if (new File(rootProject.projectDir, 'findbugs-filter.xml').exists()) {
+                excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
+            } else {
+                for (final File dir : startParameter.getInitScripts()) {
+                    if (new File(dir.getParentFile(), 'findbugs-filter.xml').exists()) {
+                        excludeFilter new File(dir.getParentFile(), 'findbugs-filter.xml')
+                        break;
+                    }
+                }
+            }
             //excludeFilter script.file('findbugs-filter.xml')
             classes = files()
             if (android.hasProperty('applicationVariants')) {
