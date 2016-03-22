@@ -1,10 +1,22 @@
+final String configFileName = 'pmd.config'
 projectsEvaluated{
     rootProject.subprojects {
+        // Find ruleSets config file
+        if (new File(rootProject.projectDir, configFileName).exists()) {
+            apply from: new File(rootProject.projectDir, configFileName)
+        } else {
+            for (final File dir : startParameter.getInitScripts()) {
+                if (new File(dir.getParentFile(), 'checkstyle.xml').exists()) {
+                    apply from: new File(dir.getParentFile(), configFileName)
+                    break
+                }
+            }
+        }
         apply plugin: 'pmd'
 
         //PMD task
         task pmd(type: Pmd) {
-            ruleSets = ["java-android", "java-basic", "java-braces", "java-strings"]
+            ruleSets = rootProject.ext.ruleSets
             source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
             ignoreFailures = true // Don't report error if there are bugs found.
         }
