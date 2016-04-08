@@ -2,65 +2,67 @@
 
 projectsEvaluated{
     rootProject.subprojects {
-        repositories {
-            mavenCentral()
-        }
-        apply plugin: 'findbugs'
+        if (project.hasProperty('android')) {
+            repositories {
+                mavenCentral()
+            }
+            apply plugin: 'findbugs'
 
-        //Findbugs task
+            //Findbugs task
 //        task findbugs(type: FindBugs, dependsOn: [project.assembleDebug]) {
-        task findbugs(type: FindBugs, dependsOn: [project.assembleRelease]) {
-            // Find excludes filter
-            if (new File(rootProject.projectDir, 'findbugs-filter.xml').exists()) {
-                excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
-            } else {
-                for (final File dir : startParameter.getInitScripts()) {
-                    if (new File(dir.getParentFile(), 'findbugs-filter.xml').exists()) {
-                        excludeFilter new File(dir.getParentFile(), 'findbugs-filter.xml')
-                        break;
+            task findbugs(type: FindBugs, dependsOn: [project.assembleRelease]) {
+                // Find excludes filter
+                if (new File(rootProject.projectDir, 'findbugs-filter.xml').exists()) {
+                    excludeFilter new File(rootProject.projectDir, 'findbugs-filter.xml')
+                } else {
+                    for (final File dir : startParameter.getInitScripts()) {
+                        if (new File(dir.getParentFile(), 'findbugs-filter.xml').exists()) {
+                            excludeFilter new File(dir.getParentFile(), 'findbugs-filter.xml')
+                            break;
+                        }
                     }
                 }
+                //excludeFilter script.file('findbugs-filter.xml')
+                classes = files()
+                if (android.hasProperty('applicationVariants')) {
+                    project.android.applicationVariants.all { variant ->
+                        if (variant.buildType.name == "debug") {
+                            classes += files("${variant.javaCompile.destinationDir}")
+                        }
+                    }
+                } else if (android.hasProperty('libraryVariants')) {
+                    project.android.libraryVariants.all { variant ->
+                        if (variant.buildType.name == "debug") {
+                            classes += files("${variant.javaCompile.destinationDir}")
+                        }
+                    }
+                }
+                if (android.hasProperty('testVariants')) {
+                    project.android.testVariants.all { variant ->
+                        if (variant.buildType.name == "debug") {
+                            classes += files("${variant.javaCompile.destinationDir}")
+                        }
+                    }
+                }
+                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
+                classpath = project.configurations.compile + files(project.android.bootClasspath)
+                effort = 'max'
+                reportLevel = "low"
+                ignoreFailures = true // Don't report error if there are bugs found.
             }
-            //excludeFilter script.file('findbugs-filter.xml')
-            classes = files()
-            if (android.hasProperty('applicationVariants')) {
-                project.android.applicationVariants.all { variant ->
-                    if (variant.buildType.name == "debug") {
-                        classes += files("${variant.javaCompile.destinationDir}")
-                    }
-                }
-            } else if (android.hasProperty('libraryVariants')) {
-                project.android.libraryVariants.all { variant ->
-                    if (variant.buildType.name == "debug") {
-                        classes += files("${variant.javaCompile.destinationDir}")
-                    }
-                }
+            // Flavourless projects need assembleDebugAndroidTest
+            // Flavoured projects need assembleAndroidTest
+            if (project.hasProperty('assembleDebugAndroidTest')) {
+                project.tasks.findbugs.dependsOn += ['assembleDebugAndroidTest']
+            } else if (project.hasProperty('assembleAndroidTest')) {
+                project.tasks.findbugs.dependsOn += ['assembleAndroidTest']
             }
-            if (android.hasProperty('testVariants')) {
-                project.android.testVariants.all { variant ->
-                    if (variant.buildType.name == "debug") {
-                        classes += files("${variant.javaCompile.destinationDir}")
-                    }
-                }
+            if (project.hasProperty('assembleDebugUnitTest')) {
+                project.tasks.findbugs.dependsOn += ['assembleDebugUnitTest']
+            } else if (project.hasProperty('assembleUnitTest')) {
+                project.tasks.findbugs.dependsOn += ['assembleUnitTest']
             }
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
-            classpath = project.configurations.compile + files(project.android.bootClasspath)
-            effort = 'max'
-            reportLevel = "low"
-            ignoreFailures = true // Don't report error if there are bugs found.
+            project.check.dependsOn += [project.tasks.findbugs]
         }
-        // Flavourless projects need assembleDebugAndroidTest
-        // Flavoured projects need assembleAndroidTest
-        if (project.hasProperty('assembleDebugAndroidTest')) {
-            project.tasks.findbugs.dependsOn += ['assembleDebugAndroidTest']
-        } else if (project.hasProperty('assembleAndroidTest')) {
-            project.tasks.findbugs.dependsOn += ['assembleAndroidTest']
-        }
-        if (project.hasProperty('assembleDebugUnitTest')) {
-            project.tasks.findbugs.dependsOn += ['assembleDebugUnitTest']
-        } else if (project.hasProperty('assembleUnitTest')) {
-            project.tasks.findbugs.dependsOn += ['assembleUnitTest']
-        }
-        project.check.dependsOn += [project.tasks.findbugs]
     }
 }

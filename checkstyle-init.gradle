@@ -1,41 +1,43 @@
 projectsEvaluated{
     rootProject.subprojects {
-        repositories {
-            mavenCentral()
-        }
-        apply plugin: 'checkstyle'
-    
-        //CheckStyle task
-        task checkstyle(type: Checkstyle, dependsOn: [project.assembleDebug]) {
-            // Find excludes filter
-            if (new File(rootProject.projectDir, 'checkstyle.xml').exists()) {
-                configFile new File(rootProject.projectDir, 'checkstyle.xml')
-            } else {
-                for (final File dir : startParameter.getInitScripts()) {
-                    if (new File(dir.getParentFile(), 'checkstyle.xml').exists()) {
-                        configFile new File(dir.getParentFile(), 'checkstyle.xml')
-                        break;
+        if (project.hasProperty('android')) {
+            repositories {
+                mavenCentral()
+            }
+            apply plugin: 'checkstyle'
+
+            //CheckStyle task
+            task checkstyle(type: Checkstyle, dependsOn: [project.assembleDebug]) {
+                // Find excludes filter
+                if (new File(rootProject.projectDir, 'checkstyle.xml').exists()) {
+                    configFile new File(rootProject.projectDir, 'checkstyle.xml')
+                } else {
+                    for (final File dir : startParameter.getInitScripts()) {
+                        if (new File(dir.getParentFile(), 'checkstyle.xml').exists()) {
+                            configFile new File(dir.getParentFile(), 'checkstyle.xml')
+                            break;
+                        }
                     }
                 }
+                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
+                include '**/*.java'
+                exclude '**/gen/**'
+                classpath = project.configurations.compile + files(project.android.bootClasspath)
+                ignoreFailures = true // Don't report error if there are bugs found.
             }
-            source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
-            include '**/*.java'
-            exclude '**/gen/**'
-            classpath = project.configurations.compile + files(project.android.bootClasspath)
-            ignoreFailures = true // Don't report error if there are bugs found.
+            // Flavourless projects need assembleDebugAndroidTest
+            // Flavoured projects need assembleAndroidTest
+            if (project.hasProperty('assembleDebugAndroidTest')) {
+                project.tasks.checkstyle.dependsOn += ['assembleDebugAndroidTest']
+            } else if (project.hasProperty('assembleAndroidTest')) {
+                project.tasks.checkstyle.dependsOn += ['assembleAndroidTest']
+            }
+            if (project.hasProperty('assembleDebugUnitTest')) {
+                project.tasks.checkstyle.dependsOn += ['assembleDebugUnitTest']
+            } else if (project.hasProperty('assembleUnitTest')) {
+                project.tasks.checkstyle.dependsOn += ['assembleUnitTest']
+            }
+            project.check.dependsOn += [project.tasks.checkstyle]
         }
-        // Flavourless projects need assembleDebugAndroidTest
-        // Flavoured projects need assembleAndroidTest
-        if (project.hasProperty('assembleDebugAndroidTest')) {
-            project.tasks.checkstyle.dependsOn += ['assembleDebugAndroidTest']
-        } else if (project.hasProperty('assembleAndroidTest')) {
-            project.tasks.checkstyle.dependsOn += ['assembleAndroidTest']
-        }
-        if (project.hasProperty('assembleDebugUnitTest')) {
-            project.tasks.checkstyle.dependsOn += ['assembleDebugUnitTest']
-        } else if (project.hasProperty('assembleUnitTest')) {
-            project.tasks.checkstyle.dependsOn += ['assembleUnitTest']
-        }
-        project.check.dependsOn += [project.tasks.checkstyle]
     }
 }
