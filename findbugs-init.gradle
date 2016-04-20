@@ -48,6 +48,13 @@ projectsEvaluated{
                 classpath = project.configurations.compile + files(project.android.bootClasspath)
                 effort = 'max'
                 reportLevel = "low"
+                reports {
+                    //html.enabled = true
+                    xml {
+                    //    enabled = false
+                        withMessages = true
+                    }
+                }
                 ignoreFailures = true // Don't report error if there are bugs found.
             }
             // Flavourless projects need assembleDebugAndroidTest
