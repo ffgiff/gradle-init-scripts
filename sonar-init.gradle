@@ -13,15 +13,15 @@ rootProject {
 
 projectsEvaluated{
     rootProject {
-        if (project.hasProperty('android')) {
-            apply plugin: "org.sonarqube"
- 
-            sonarqube {
-                properties {
-                    property "sonar.sourceEncoding", "UTF-8"
-                }
+        apply plugin: "org.sonarqube"
+
+        sonarqube {
+            properties {
+                property "sonar.sourceEncoding", "UTF-8"
             }
-            subprojects {
+        }
+        subprojects {
+            if (project.hasProperty("android")) {
                 sonarqube {
                     properties {
                         // BUG: https://jira.sonarsource.com/browse/SONARJAVA-930
@@ -65,7 +65,7 @@ projectsEvaluated{
                             properties {
                                 if (project.hasProperty("create" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTestCoverageReport")) {
                                     property "sonar.jacoco.reportPath", project.tasks.getByName("create" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTestCoverageReport").coverageFile
-                                    property "sonar.java.coveragePlugin", "jacoco"
+                                   property "sonar.java.coveragePlugin", "jacoco"
                                     property "sonar.dynamicAnalysis", "reuseReports"
                                 }
                                 if (project.hasProperty("connected" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTest")) {
