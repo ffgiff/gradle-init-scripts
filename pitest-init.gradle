@@ -1,5 +1,5 @@
 
-initscript {
+buildscript {
     repositories {
         jcenter()
     }
@@ -36,13 +36,14 @@ def runPitest(project, testTask) {
         ext.testSource += testSource.java.srcDirs
     }
     new ProcessBuilder("java",
-        "-classpath", (files(initscript.scriptClassPath.asFiles) +
+        "-classpath", (files(buildscript.scriptClassPath.asFiles) +
                                    project.tasks[testTask].classpath).asPath,
         "org.pitest.mutationtest.commandline.MutationCoverageReport",
         "--reportDir", project.reportsDir.getPath(),
         "--targetClasses", project.processReleaseManifest.packageOverride + ".*",
         "--sourceDirs", files(ext.testSource).asPath.replaceAll(":", ","),
         "--jvmArgs", "-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m",
+        "--verbose",
         "--threads", "4")
         .redirectInput(ProcessBuilder.Redirect.INHERIT)
         .redirectOutput(ProcessBuilder.Redirect.INHERIT)

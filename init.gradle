@@ -1,3 +1,4 @@
 apply from: 'documentation-init.gradle'
 apply from: 'static-checker-init.gradle'
 apply from: 'sign-external-init.gradle'
+apply from: 'pitest-init.gradle'
