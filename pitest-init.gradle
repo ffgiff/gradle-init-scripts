@@ -1,0 +1,53 @@
+
+initscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.pitest:pitest:1.1.10'
+        classpath 'org.pitest:pitest-command-line:1.1.10'
+    }
+}
+
+projectsEvaluated{
+    rootProject.subprojects {
+        if (project.hasProperty('android')) {
+            task pitest << {
+                // Meta-task, will dependOn pitestDebugUnitTest etc.
+            }
+            project.tasks.test.dependsOn.each { testTask ->
+                if (testTask instanceof String &&
+                        testTask.startsWith("test")) {
+                    task "pi$testTask"(dependsOn: "$testTask") << {
+                        runPitest(project, testTask)
+                    }
+                    project.pitest.dependsOn += [project.tasks."pi$testTask"]
+                }
+            }
+        }
+    }
+}
+
+def runPitest(project, testTask) {
+    ext.testSource = project.android.sourceSets.main.java.srcDirs
+    project.android.unitTestVariants.matching(
+            {it.name.equals(testTask.substring(4, 5).toLowerCase() + testTask.substring(5))}
+            ).sourceSets.each { testSource ->
+        ext.testSource += testSource.java.srcDirs
+    }
+    new ProcessBuilder("java",
+        "-classpath", (files(initscript.scriptClassPath.asFiles) +
+                                   project.tasks[testTask].classpath).asPath,
+        "org.pitest.mutationtest.commandline.MutationCoverageReport",
+        "--reportDir", project.reportsDir.getPath(),
+        "--targetClasses", project.processReleaseManifest.packageOverride + ".*",
+        "--sourceDirs", files(ext.testSource).asPath.replaceAll(":", ","),
+        "--jvmArgs", "-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m",
+        "--threads", "4")
+        .redirectInput(ProcessBuilder.Redirect.INHERIT)
+        .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+        .redirectError(ProcessBuilder.Redirect.INHERIT)
+        .start()
+        .waitFor()
+}
+
