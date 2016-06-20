@@ -45,6 +45,7 @@ def runPitest(project, testTask) {
         "--jvmArgs", "-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m",
         "--verbose",
         "--threads", "4")
+        .directory(project.projectDir)
         .redirectInput(ProcessBuilder.Redirect.INHERIT)
         .redirectOutput(ProcessBuilder.Redirect.INHERIT)
         .redirectError(ProcessBuilder.Redirect.INHERIT)
