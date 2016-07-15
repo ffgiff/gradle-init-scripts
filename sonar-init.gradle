@@ -24,6 +24,7 @@ projectsEvaluated{
             if (project.hasProperty("android")) {
                 sonarqube {
                     properties {
+                        property "sonar.projectBaseDir", rootProject.projectDir.getAbsolutePath()
                         // BUG: https://jira.sonarsource.com/browse/SONARJAVA-930
                         property "sonar.exclusions", "**/ExtNodesHandler.java"
                         // End BUG: https://jira.sonarsource.com/browse/SONARJAVA-930
