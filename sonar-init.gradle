@@ -6,7 +6,7 @@ rootProject {
             }
         }
         dependencies {
-            classpath "org.sonarqube.gradle:gradle-sonarqube-plugin:1.1"
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.1-rc3"
         }
     }
 }
