@@ -25,53 +25,46 @@ projectsEvaluated{
                 sonarqube {
                     properties {
                         property "sonar.projectBaseDir", rootProject.projectDir.getAbsolutePath()
-                        // BUG: https://jira.sonarsource.com/browse/SONARJAVA-930
-                        property "sonar.exclusions", "**/ExtNodesHandler.java"
-                        // End BUG: https://jira.sonarsource.com/browse/SONARJAVA-930
                         if (!android.sourceSets.main.java.sourceFiles.isEmpty()) {
                             property "sonar.sources", android.sourceSets.main.java.srcDirs
                             if (android.hasProperty('applicationVariants')) {
                                 project.android.applicationVariants.all { variant ->
                                     property "sonar.java.binaries", variant.javaCompile.destinationDir
                                     property "sonar.java.libraries", variant.javaCompile.classpath + files(project.android.bootClasspath)
+                                    final String variantName = variant.name.substring(0, 1).toUpperCase() + variant.name.substring(1)
+                                    if (project.hasProperty("connected" + variantName + "AndroidTest") &&
+                                            project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir.isDirectory() &&
+                                            project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir.listFiles().length > 0) {
+                                        property "sonar.tests", android.sourceSets.androidTest.java.srcDirs
+                                        property "sonar.junit.reportsPath", project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir
+                                    }
+                                    if (project.hasProperty("create" + variantName + "AndroidTestCoverageReport")
+                                            && project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile.exists()) {
+                                        property "sonar.jacoco.reportPath", project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile
+                                        property "sonar.java.coveragePlugin", "jacoco"
+                                        property "sonar.dynamicAnalysis", "reuseReports"
+                                    }
                                 }
+/*
                             } else if (android.hasProperty('libraryVariants')) {
                                 project.android.libraryVariants.all { variant ->
                                     property "sonar.java.binaries", variant.javaCompile.destinationDir
                                     property "sonar.java.libraries", variant.javaCompile.classpath + files(project.android.bootClasspath)
+                                    final String variantName = variant.name.substring(0, 1).toUpperCase() + variant.name.substring(1)
+                                    if (project.hasProperty("connected" + variantName + "AndroidTest") &&
+                                            project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir.isDirectory() &&
+                                            project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir.listFiles().length > 0) {
+                                        property "sonar.tests", android.sourceSets.androidTest.java.srcDirs
+                                        property "sonar.junit.reportsPath", project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir
+                                    }
+                                    if (project.hasProperty("create" + variantName + "AndroidTestCoverageReport")
+                                            && project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile.exists()) {
+                                        property "sonar.jacoco.reportPath", project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile
+                                        property "sonar.java.coveragePlugin", "jacoco"
+                                        property "sonar.dynamicAnalysis", "reuseReports"
+                                    }
                                 }
-                            }
-                        }
-                        if (!android.sourceSets.androidTest.java.sourceFiles.isEmpty()) {
-                            property "sonar.tests", android.sourceSets.androidTest.java.srcDirs
-                        }
-                    }
-                }
-                if (android.productFlavors.isEmpty()) {
-                    sonarqube {
-                        properties {
-                            if (project.hasProperty("createDebugAndroidTestCoverageReport")) {
-                                property "sonar.jacoco.reportPath", project.tasks.getByName("createDebugAndroidTestCoverageReport").coverageFile
-                                property "sonar.java.coveragePlugin", "jacoco"
-                                property "sonar.dynamicAnalysis", "reuseReports"
-                            }
-                            if (project.hasProperty("connectedDebugAndroidTest")) {
-                                property "sonar.junit.reportsPath", project.tasks.getByName("connectedDebugAndroidTest").resultsDir
-                            }
-                        }
-                    }
-                } else {
-                    android.productFlavors.all { flavor ->
-                        sonarqube {
-                            properties {
-                                if (project.hasProperty("create" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTestCoverageReport")) {
-                                    property "sonar.jacoco.reportPath", project.tasks.getByName("create" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTestCoverageReport").coverageFile
-                                   property "sonar.java.coveragePlugin", "jacoco"
-                                    property "sonar.dynamicAnalysis", "reuseReports"
-                                }
-                                if (project.hasProperty("connected" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTest")) {
-                                    property "sonar.junit.reportsPath", project.tasks.getByName("connected" + flavor.name.substring(0,1).toUpperCase() + flavor.name.substring(1) + "DebugAndroidTest").resultsDir
-                                }
+*/
                             }
                         }
                     }
