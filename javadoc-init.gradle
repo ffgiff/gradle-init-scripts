@@ -17,15 +17,13 @@ projectsEvaluated{
                             }
                         }
                     }
-//            } else if (android.hasProperty('libraryVariants')) {
-//                project.android.libraryVariants.all { variant ->
-//                    if(variant.buildType.name == "release") {
-//                        classpath += files("${variant.javaCompile.destinationDir}")
-//                        variant.compileLibraries.each { lib ->
-//                            classpath += files(lib)
-//                        }
-//                    }
-//                }
+                } else if (android.hasProperty('libraryVariants')) {
+                    project.android.libraryVariants.all { variant ->
+                        if(variant.buildType.name == "release") {
+                            classpath += files("${variant.javaCompile.destinationDir}")
+                            classpath += variant.javaCompile.classpath
+                        }
+                    }
                 }
                 exclude '**/*.aj'
                 source = [android.sourceSets.main.java.srcDirs,
