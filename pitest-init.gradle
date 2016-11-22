@@ -12,7 +12,7 @@ buildscript {
 projectsEvaluated{
     rootProject.subprojects {
         if (project.hasProperty('android')) {
-            task pitest << {
+            task pitest {
                 // Meta-task, will dependOn pitestDebugUnitTest etc.
             }
             project.tasks.test.dependsOn.each { testTask ->
