@@ -13,6 +13,9 @@ These init scripts augment an Android build by adding support for:
 - Test
   - Pitest
 - External APK signing
+  - Needs you to write a closure containing your service's logic.
+- Custom keystore APK signing
+  - Lets you avoid modifying build.gradle and chooses key for connected device.
 
 # Usage
 
@@ -35,4 +38,9 @@ Make some documentation.
 Run mutation tests against your unit tests.
 ~~~~
 ./gradlew -I init.gradle pitest
+~~~~
+
+Install release apk for a project, even though its build.gradle doesn't specify the release key.
+~~~~
+./gradlew -I signing-init.gradle installRelease
 ~~~~
