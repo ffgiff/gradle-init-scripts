@@ -39,6 +39,7 @@ projectsEvaluated{
                                         property "sonar.junit.reportsPath", project.tasks.getByName("connected" + variantName + "AndroidTest").resultsDir
                                     }
                                     if (project.hasProperty("create" + variantName + "AndroidTestCoverageReport")
+                                            && null != project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile
                                             && project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile.exists()) {
                                         property "sonar.jacoco.reportPath", project.tasks.getByName("create" + variantName + "AndroidTestCoverageReport").coverageFile
                                         property "sonar.java.coveragePlugin", "jacoco"
