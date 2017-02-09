@@ -1,11 +1,16 @@
 projectsEvaluated {
     rootProject.subprojects {
         if (project.hasProperty('android')) {
-            addJavadocTask(project)
+            JavadocHelper.addJavadocTask(project)
         }
     }
 }
-void addJavadocTask(final Project project) {
+
+final class JavadocHelper {
+private static final String APP_VARIANTS = 'applicationVariants'
+private static final String LIB_VARIANTS = 'libraryVariants'
+
+static void addJavadocTask(final Project project) {
 //        task javadoc (type: Javadoc, dependsOn: project.tasks.assembleDebug) {
     project.tasks.create([name:'javadoc',
                           type:Javadoc,
@@ -13,9 +18,9 @@ void addJavadocTask(final Project project) {
         classpath = project.configurations.compile +
                     project.configurations.testCompile +
                     project.configurations.androidTestCompile +
-                    files(project.android.bootClasspath)
+                    project.files(project.android.bootClasspath)
 //        classpath = project.configurations.compile + files(android.bootClasspath)
-        for (final String variantType : ['applicationVariants', 'libraryVariants']) {
+        for (final String variantType : [APP_VARIANTS, LIB_VARIANTS]) {
             if (project.android.hasProperty(variantType)) {
                 classpath += getClasspathForVariantType(variantType, project)
             }
@@ -34,19 +39,20 @@ void addJavadocTask(final Project project) {
     }
 }
 
-FileCollection getClasspathForVariantType(final String variantType, final Project project) {
-    FileCollection classpath = files()
+private static FileCollection getClasspathForVariantType(final String variantType, final Project project) {
+    FileCollection classpath = project.files()
     project.android."${variantType}".all { variant ->
         if (variant.buildType.name == 'release') {
-            classpath += files("${variant.javaCompile.destinationDir}")
-            if ("${variantType}" == 'applicationVariants') {
+            classpath += project.files("${variant.javaCompile.destinationDir}")
+            if ("${variantType}" == APP_VARIANTS) {
                 variant.compileLibraries.each { lib ->
-                    classpath += files(lib)
+                    classpath += project.files(lib)
                 }
-            } else if ("${variantType}" == 'libraryVariants') {
+            } else if ("${variantType}" == LIB_VARIANTS) {
                 classpath += variant.javaCompile.classpath
             }
         }
     }
     classpath
+}
 }

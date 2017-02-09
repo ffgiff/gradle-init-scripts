@@ -4,54 +4,59 @@ projectsEvaluated {
             repositories {
                 mavenCentral()
             }
-            apply plugin:'findbugs'
 
-            //Findbugs task
-//        task findbugs(type: FindBugs, dependsOn: [project.assembleDebug]) {
-            task findbugs(type:FindBugs, dependsOn:[project.assembleRelease]) {
-                // Find excludes filter
-                final String CONFIG_FILE_NAME = 'findbugs-filter.xml'
-                if (rootProject.file(CONFIG_FILE_NAME).exists()) {
-                    excludeFilter rootProject.file(CONFIG_FILE_NAME)
-                } else {
-                    for (final File dir : startParameter.initScripts) {
-                        if (new File(dir.parentFile, CONFIG_FILE_NAME).exists()) {
-                            excludeFilter new File(dir.parentFile, CONFIG_FILE_NAME)
-                            break
-                        }
-                    }
-                }
-                //excludeFilter script.file(CONFIG_FILE_NAME)
-                classes = getDebugSources(project)
-                source = [android.sourceSets.main.java.srcDirs,
-                          android.sourceSets.androidTest.java.srcDirs,
-                          android.sourceSets.test.java.srcDirs]
-                classpath = project.configurations.compile + files(project.android.bootClasspath)
-                effort = 'max'
-                reportLevel = 'low'
-                reports {
-                    //html.enabled = true
-                    xml {
-                    //    enabled = false
-                        withMessages = true
-                    }
-                }
-                ignoreFailures = true // Don't report error if there are bugs found.
-            }
+            addFindBugsTask project
+
             // Flavourless projects need assembleDebugAndroidTest
             // Flavoured projects need assembleAndroidTest
-            if (project.hasProperty('assembleDebugAndroidTest')) {
-                project.tasks.findbugs.dependsOn += ['assembleDebugAndroidTest']
-            } else if (project.hasProperty('assembleAndroidTest')) {
-                project.tasks.findbugs.dependsOn += ['assembleAndroidTest']
-            }
-            if (project.hasProperty('assembleDebugUnitTest')) {
-                project.tasks.findbugs.dependsOn += ['assembleDebugUnitTest']
-            } else if (project.hasProperty('assembleUnitTest')) {
-                project.tasks.findbugs.dependsOn += ['assembleUnitTest']
+            for (final String taskProperty : ['assembleDebugAndroidTest',
+                                              'assembleAndroidTest',
+                                              'assembleDebugUnitTest',
+                                              'assembleUnitTest']) {
+                if (project.hasProperty(taskProperty)) {
+                    project.tasks.findbugs.dependsOn += [taskProperty]
+                }
             }
             project.check.dependsOn += [project.tasks.findbugs]
         }
+    }
+}
+
+//Findbugs task
+void addFindBugsTask(final Project project) {
+    final String TASK_NAME = 'findbugs'
+    project.apply plugin:TASK_NAME
+    project.tasks.create([name:TASK_NAME,
+                          type:FindBugs,
+                          dependsOn:[project.assembleRelease]]) {
+        // Find excludes filter
+        final String CONFIG_NAME = 'findbugs-filter.xml'
+        if (rootProject.file(CONFIG_NAME).exists()) {
+            excludeFilter rootProject.file(CONFIG_NAME)
+        } else {
+            for (final File dir : startParameter.initScripts) {
+                 if (new File(dir.parentFile, CONFIG_NAME).exists()) {
+                    excludeFilter new File(dir.parentFile, CONFIG_NAME)
+                    break
+                }
+            }
+        }
+        //excludeFilter script.file(CONFIG_NAME)
+        classes = getDebugSources(project)
+        source = [project.android.sourceSets.main.java.srcDirs,
+                  project.android.sourceSets.androidTest.java.srcDirs,
+                  project.android.sourceSets.test.java.srcDirs]
+        classpath = project.configurations.compile + files(project.android.bootClasspath)
+        effort = 'max'
+        reportLevel = 'low'
+        reports {
+            //html.enabled = true
+            xml {
+            //    enabled = false
+                withMessages = true
+            }
+        }
+        ignoreFailures = true // Don't report error if there are bugs found.
     }
 }
 

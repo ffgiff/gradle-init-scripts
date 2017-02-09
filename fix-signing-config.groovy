@@ -2,7 +2,7 @@
 // Keystore name is set with command parameter or defaults to '.keystore'
 // Key alias is taken from connected device properties or defaults to 'androiddebugkey'
 apply from:'build.gradle'
-final boolean oneConnectedDevice = 0 ==
+final boolean ONE_CONNECTED_DEVICE = 0 ==
         new ProcessBuilder(project.android.adbExe.path, 'get-serialno')
                 .start()
                 .waitFor()
@@ -10,7 +10,7 @@ String signCert =
         (project.hasProperty('signCert')) ? signCert = project.signCert : ''
 String signFor =
         (project.hasProperty('signFor')) ? signFor = project.signFor : 'androiddebugkey'
-if (oneConnectedDevice || null != System.getenv('ANDROID_SERIAL')) {
+if (ONE_CONNECTED_DEVICE || null != System.getenv('ANDROID_SERIAL')) {
     signFor = getAndroidProperty('ro.product.name') + '_' + getAndroidProperty('ro.build.type')
 }
 
@@ -21,7 +21,7 @@ project.android {
                     "${signCert}.keystore")
             storePassword 'android'
             keyAlias signFor
-            keyPassword 'android'
+            keyPassword storePassword
         }
     }
     buildTypes {

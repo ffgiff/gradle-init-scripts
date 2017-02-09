@@ -1,18 +1,7 @@
-final String CONFIG_FILE_NAME = 'pmd.config'
 projectsEvaluated {
     rootProject.subprojects {
         if (project.hasProperty('android')) {
-            // Find ruleSets config file
-            if (rootProject.file(CONFIG_FILE_NAME).exists()) {
-                apply from:rootProject.file(CONFIG_FILE_NAME)
-            } else {
-                for (final File dir : startParameter.initScripts) {
-                    if (new File(dir.parentFile, CONFIG_FILE_NAME).exists()) {
-                        apply from:new File(dir.parentFile, CONFIG_FILE_NAME)
-                        break
-                    }
-                }
-            }
+            setConfig(project)
             repositories {
                 mavenCentral()
             }
@@ -28,6 +17,21 @@ projectsEvaluated {
             }
 
             project.check.dependsOn += [project.tasks.pmd]
+        }
+    }
+}
+
+File setConfig(final Project project) {
+    final String CONFIG_NAME = 'pmd.config'
+    // Find ruleSets config file
+    if (rootProject.file(CONFIG_NAME).exists()) {
+        project.apply from:rootProject.file(CONFIG_NAME)
+    } else {
+        for (final File dir : startParameter.initScripts) {
+            if (new File(dir.parentFile, CONFIG_NAME).exists()) {
+                project.apply from:new File(dir.parentFile, CONFIG_NAME)
+                break
+            }
         }
     }
 }
