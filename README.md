@@ -21,26 +21,26 @@ These init scripts augment an Android build by adding support for:
 
 Add checkstyle, findbugs and pmd to the standard Android/gradle `check` task.
 ~~~~
-./gradlew -I init.gradle build
+./gradlew -I init.groovy build
 ~~~~
 
 Upload source and test results to a local sonar server.
 ~~~~
-./gradlew -I init.gradle sonar
+./gradlew -I init.groovy sonar
 ~~~~
 
 Make some documentation.
 ~~~~
-./gradlew -I init.gradle javadoc
-./gradlew -I init.gradle doxygen
+./gradlew -I init.groovy javadoc
+./gradlew -I init.groovy doxygen
 ~~~~
 
 Run mutation tests against your unit tests.
 ~~~~
-./gradlew -I init.gradle pitest
+./gradlew -I init.groovy pitest
 ~~~~
 
 Install release apk for a project, even though its build.gradle doesn't specify the release key.
 ~~~~
-./gradlew -I signing-init.gradle installRelease
+./gradlew -I signing-init.groovy installRelease
 ~~~~
