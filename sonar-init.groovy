@@ -24,7 +24,7 @@ projectsEvaluated {
             if (project.hasProperty('android')) {
                 sonarqube {
                     properties {
-                        property 'sonar.projectBaseDir', rootProject.projectDir.getAbsolutePath()
+                        property 'sonar.projectBaseDir', rootProject.projectDir.absolutePath
                         if (!android.sourceSets.main.java.sourceFiles.isEmpty()) {
                             property 'sonar.sources', android.sourceSets.main.java.srcDirs
                             if (android.hasProperty('applicationVariants')) {

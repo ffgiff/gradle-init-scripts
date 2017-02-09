@@ -27,7 +27,7 @@ projectsEvaluated {
     }
 }
 
-def runPitest(project, testTask) {
+void runPitest(project, testTask) {
     ext.testSource = project.android.sourceSets.main.java.srcDirs
     project.android.unitTestVariants.matching(
             { it.name == testTask[4..5].toLowerCase() + testTask[5..-1]}
@@ -38,7 +38,7 @@ def runPitest(project, testTask) {
         '-classpath', (files(buildscript.scriptClassPath.asFiles) +
                                    project.tasks[testTask].classpath).asPath,
         'org.pitest.mutationtest.commandline.MutationCoverageReport',
-        '--reportDir', project.reportsDir.getPath(),
+        '--reportDir', project.reportsDir.path,
         '--targetClasses', project.processReleaseManifest.packageOverride + '.*',
         '--sourceDirs', files(ext.testSource).asPath.replaceAll(':', ','),
         '--jvmArgs', '-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m',

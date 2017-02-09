@@ -6,9 +6,9 @@ projectsEvaluated {
             if (rootProject.file(CONFIG_FILE_NAME).exists()) {
                 apply from:rootProject.file(CONFIG_FILE_NAME)
             } else {
-                for (final File dir : startParameter.getInitScripts()) {
-                    if (new File(dir.getParentFile(), CONFIG_FILE_NAME).exists()) {
-                        apply from:new File(dir.getParentFile(), CONFIG_FILE_NAME)
+                for (final File dir : startParameter.initScripts) {
+                    if (new File(dir.parentFile, CONFIG_FILE_NAME).exists()) {
+                        apply from:new File(dir.parentFile, CONFIG_FILE_NAME)
                         break
                     }
                 }

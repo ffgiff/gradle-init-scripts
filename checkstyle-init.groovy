@@ -41,9 +41,9 @@ void addCheckStyleTask(final Project project) {
             if (rootProject.file(CONFIG_NAME).exists()) {
                 configFile rootProject.file(CONFIG_NAME)
             } else {
-                for (final File dir : startParameter.getInitScripts()) {
-                    if (new File(dir.getParentFile(), CONFIG_NAME).exists()) {
-                        configFile new File(dir.getParentFile(), CONFIG_NAME)
+                for (final File dir : startParameter.initScripts) {
+                    if (new File(dir.parentFile, CONFIG_NAME).exists()) {
+                        configFile new File(dir.parentFile, CONFIG_NAME)
                         break
                     }
                 }

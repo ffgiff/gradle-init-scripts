@@ -14,9 +14,9 @@ projectsEvaluated {
                 if (rootProject.file(CONFIG_FILE_NAME).exists()) {
                     excludeFilter rootProject.file(CONFIG_FILE_NAME)
                 } else {
-                    for (final File dir : startParameter.getInitScripts()) {
-                        if (new File(dir.getParentFile(), CONFIG_FILE_NAME).exists()) {
-                            excludeFilter new File(dir.getParentFile(), CONFIG_FILE_NAME)
+                    for (final File dir : startParameter.initScripts) {
+                        if (new File(dir.parentFile, CONFIG_FILE_NAME).exists()) {
+                            excludeFilter new File(dir.parentFile, CONFIG_FILE_NAME)
                             break
                         }
                     }

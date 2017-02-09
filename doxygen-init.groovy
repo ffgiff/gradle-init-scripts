@@ -29,12 +29,12 @@ void addDoxygenTask(final Project project) {
 
         project.tasks.doxygen {
             if (TEMPLATE.exists()) {
-                template TEMPLATE.getAbsolutePath()
+                template TEMPLATE.absolutePath
             }
 //            dependsOn project.assembleDebug
             dependsOn project.assembleRelease
             project_number project.android.defaultConfig.versionName +
-                    "(${project.android.defaultConfig.versionCode})"
+                    " (${project.android.defaultConfig.versionCode})"
             // project_logo
             output_directory project.docsDir
             source = [project.android.sourceSets.main.java.srcDirs]
@@ -49,8 +49,8 @@ File findConfig() {
     final String CONFIG_NAME = 'Doxyfile'
     File configFile = rootProject.file(CONFIG_NAME)
     if (!configFile.exists()) {
-        for (final File dir : startParameter.getInitScripts()) {
-            configFile = new File(dir.getParentFile(), CONFIG_NAME)
+        for (final File dir : startParameter.initScripts) {
+            configFile = new File(dir.parentFile, CONFIG_NAME)
             if (configFile.exists()) {
                 break
             }

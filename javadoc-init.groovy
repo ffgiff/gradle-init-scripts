@@ -34,7 +34,7 @@ projectsEvaluated {
 //            source = [android.sourceSets.androidTest.java.srcDirs]
                 options.setLinksOffline([new JavadocOfflineLink(
                         'https://developer.android.com/reference',
-                        project.android.sdkDirectory.getAbsolutePath()
+                        project.android.sdkDirectory.absolutePath
                                 .replace(File.separatorChar, (char)'/')
                             + '/docs/reference')])
                 options.encoding('utf-8')
