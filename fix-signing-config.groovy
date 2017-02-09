@@ -11,34 +11,7 @@ String signCert =
 String signFor =
         (project.hasProperty('signFor')) ? signFor = project.signFor : 'androiddebugkey'
 if (oneConnectedDevice || null != System.getenv('ANDROID_SERIAL')) {
-    final Process getName =
-        new ProcessBuilder(project.android.adbExe.path, 'shell', 'getprop', 'ro.product.name')
-                .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                .start()
-    getName.waitFor()
-    final Process getType =
-        new ProcessBuilder(project.android.adbExe.path, 'shell', 'getprop', 'ro.build.type')
-                .redirectInput(ProcessBuilder.Redirect.INHERIT)
-                .redirectError(ProcessBuilder.Redirect.INHERIT)
-                .start()
-    getType.waitFor()
-// Gradle doesn't support try-with-resources :-(
-//    try (final BufferedReader nameReader =
-//            new BufferedReader(new InputStreamReader(getName.getInputStream(), 'US-ASCII'));
-//         final BufferedReader typeReader =
-//            new BufferedReader(new InputStreamReader(getType.getInputStream(), 'US-ASCII'))) {
-    try {
-        final BufferedReader nameReader = new BufferedReader(
-                new InputStreamReader(getName.inputStream, 'US-ASCII'))
-        final BufferedReader typeReader = new BufferedReader(
-                new InputStreamReader(getType.inputStream, 'US-ASCII'))
-        signFor = nameReader.readLine() + '_' + typeReader.readLine()
-        nameReader.close()
-        typeReader.close()
-    } catch (final IOException e) {
-        project.logger.log(0, e.localizedMessage, e)
-    }
+    signFor = getAndroidProperty('ro.product.name') + '_' + getAndroidProperty('ro.build.type')
 }
 
 project.android {
@@ -59,4 +32,25 @@ project.android {
             signingConfig signingConfigs.signingConfig
         }
     }
+}
+String getAndroidProperty(final String prop) {
+    String result = ''
+    final Process PROCESS =
+        new ProcessBuilder(project.android.adbExe.path, 'shell', 'getprop', prop)
+                .redirectInput(ProcessBuilder.Redirect.INHERIT)
+                .redirectError(ProcessBuilder.Redirect.INHERIT)
+                .start()
+    PROCESS.waitFor()
+// Gradle doesn't support try-with-resources :-(
+//    try (final BufferedReader READER =
+//            new BufferedReader(new InputStreamReader(PROCESS.getInputStream(), 'US-ASCII'));
+    try {
+        final BufferedReader READER = new BufferedReader(
+                new InputStreamReader(PROCESS.inputStream, 'US-ASCII'))
+        result = READER.readLine()
+        READER.close()
+    } catch (final IOException e) {
+        project.logger.log(0, e.localizedMessage, e)
+    }
+    result
 }

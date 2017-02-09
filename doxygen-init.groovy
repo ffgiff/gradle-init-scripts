@@ -22,7 +22,6 @@ projectsEvaluated {
 //    }
 }
 void addDoxygenTask(final Project project) {
-    project.logger.log(LogLevel.WARN, this.toString())
     final File TEMPLATE = findConfig()
     if (project.hasProperty('android')) {
         project.apply plugin:'org.ysb33r.doxygen'
