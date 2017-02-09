@@ -11,7 +11,7 @@ settingsEvaluated { settings ->
                     it.setBuildFileName(
                             FileSystems.default.getPath(it.dir.toString())
                                     .relativize(FileSystems.default.getPath(new File(
-                                            buildscript.getSourceFile().parentFile,
+                                            buildscript.sourceFile.parentFile,
                                             'fix-signing-config.groovy').toString()))
                                     .toString())
                     break

@@ -22,27 +22,7 @@ projectsEvaluated {
                     }
                 }
                 //excludeFilter script.file(CONFIG_FILE_NAME)
-                classes = files()
-                if (android.hasProperty('applicationVariants')) {
-                    project.android.applicationVariants.all { variant ->
-                        if (variant.buildType.name == 'debug') {
-                            classes += files("${variant.javaCompile.destinationDir}")
-                        }
-                    }
-                } else if (android.hasProperty('libraryVariants')) {
-                    project.android.libraryVariants.all { variant ->
-                        if (variant.buildType.name == 'debug') {
-                            classes += files("${variant.javaCompile.destinationDir}")
-                        }
-                    }
-                }
-                if (android.hasProperty('testVariants')) {
-                    project.android.testVariants.all { variant ->
-                        if (variant.buildType.name == 'debug') {
-                            classes += files("${variant.javaCompile.destinationDir}")
-                        }
-                    }
-                }
+                classes = getDebugSources(project)
                 source = [android.sourceSets.main.java.srcDirs,
                           android.sourceSets.androidTest.java.srcDirs,
                           android.sourceSets.test.java.srcDirs]
@@ -74,3 +54,18 @@ projectsEvaluated {
         }
     }
 }
+
+FileCollection getDebugSources(final Project project) {
+    FileCollection classes = project.files()
+    for (final String variantType : ['applicationVariants', 'libraryVariants', 'testVariants']) {
+        if (project.android.hasProperty(variantType)) {
+            project.android."${variantType}".all { variant ->
+                if (variant.buildType.name == 'debug') {
+                    classes += files("${variant.javaCompile.destinationDir}")
+                }
+            }
+        }
+    }
+    classes
+}
+
