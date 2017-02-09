@@ -1,14 +1,14 @@
-final String configFileName = 'pmd.config'
-projectsEvaluated{
+final String CONFIG_FILE_NAME = 'pmd.config'
+projectsEvaluated {
     rootProject.subprojects {
         if (project.hasProperty('android')) {
             // Find ruleSets config file
-            if (new File(rootProject.projectDir, configFileName).exists()) {
-                apply from: new File(rootProject.projectDir, configFileName)
+            if (rootProject.file(CONFIG_FILE_NAME).exists()) {
+                apply from:rootProject.file(CONFIG_FILE_NAME)
             } else {
                 for (final File dir : startParameter.getInitScripts()) {
-                    if (new File(dir.getParentFile(), 'checkstyle.xml').exists()) {
-                        apply from: new File(dir.getParentFile(), configFileName)
+                    if (new File(dir.getParentFile(), CONFIG_FILE_NAME).exists()) {
+                        apply from:new File(dir.getParentFile(), CONFIG_FILE_NAME)
                         break
                     }
                 }
@@ -16,12 +16,14 @@ projectsEvaluated{
             repositories {
                 mavenCentral()
             }
-            apply plugin: 'pmd'
+            apply plugin:'pmd'
 
             //PMD task
-            task pmd(type: Pmd) {
+            task pmd(type:Pmd) {
                 ruleSets = rootProject.ext.ruleSets
-                source = [android.sourceSets.main.java.srcDirs, android.sourceSets.androidTest.java.srcDirs, android.sourceSets.test.java.srcDirs]
+                source = [android.sourceSets.main.java.srcDirs,
+                          android.sourceSets.androidTest.java.srcDirs,
+                          android.sourceSets.test.java.srcDirs]
                 ignoreFailures = true // Don't report error if there are bugs found.
             }
 

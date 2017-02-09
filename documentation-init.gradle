@@ -1,2 +1,0 @@
-apply from: 'doxygen-init.gradle'
-apply from: 'javadoc-init.gradle'

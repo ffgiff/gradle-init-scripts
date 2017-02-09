@@ -7,7 +7,7 @@
 // }
 // ext.sign = this.&signingFunction
 //
-projectsEvaluated{
+projectsEvaluated {
     rootProject.subprojects {
         if (project.hasProperty('android')) {
             if (android.hasProperty('applicationVariants')) {
@@ -26,10 +26,10 @@ def signApk(project, variant) {
     variant.assemble.doLast {
         variant.outputs.each { output ->
             if (project.hasProperty('signingClosure')) {
-                apply from: project.signingClosure
+                apply from:project.signingClosure
                 sign(project, variant, output)
             } else {
-                println "No signing closure supplied."
+                println 'No signing closure supplied.'
             }
         }
     }

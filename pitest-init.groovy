@@ -1,4 +1,3 @@
-
 buildscript {
     repositories {
         jcenter()
@@ -9,7 +8,7 @@ buildscript {
     }
 }
 
-projectsEvaluated{
+projectsEvaluated {
     rootProject.subprojects {
         if (project.hasProperty('android')) {
             task pitest {
@@ -17,8 +16,8 @@ projectsEvaluated{
             }
             project.tasks.test.dependsOn.each { testTask ->
                 if (testTask instanceof String &&
-                        testTask.startsWith("test")) {
-                    task "pi$testTask"(dependsOn: "$testTask") << {
+                        testTask.startsWith('test')) {
+                    task "pi$testTask"(dependsOn:"$testTask") << {
                         runPitest(project, testTask)
                     }
                     project.pitest.dependsOn += [project.tasks."pi$testTask"]
@@ -31,20 +30,20 @@ projectsEvaluated{
 def runPitest(project, testTask) {
     ext.testSource = project.android.sourceSets.main.java.srcDirs
     project.android.unitTestVariants.matching(
-            {it.name.equals(testTask.substring(4, 5).toLowerCase() + testTask.substring(5))}
+            { it.name == testTask[4..5].toLowerCase() + testTask[5..-1]}
             ).sourceSets.each { testSource ->
         ext.testSource += testSource.java.srcDirs
     }
-    new ProcessBuilder("java",
-        "-classpath", (files(buildscript.scriptClassPath.asFiles) +
+    new ProcessBuilder('java',
+        '-classpath', (files(buildscript.scriptClassPath.asFiles) +
                                    project.tasks[testTask].classpath).asPath,
-        "org.pitest.mutationtest.commandline.MutationCoverageReport",
-        "--reportDir", project.reportsDir.getPath(),
-        "--targetClasses", project.processReleaseManifest.packageOverride + ".*",
-        "--sourceDirs", files(ext.testSource).asPath.replaceAll(":", ","),
-        "--jvmArgs", "-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m",
-        "--verbose",
-        "--threads", "4")
+        'org.pitest.mutationtest.commandline.MutationCoverageReport',
+        '--reportDir', project.reportsDir.getPath(),
+        '--targetClasses', project.processReleaseManifest.packageOverride + '.*',
+        '--sourceDirs', files(ext.testSource).asPath.replaceAll(':', ','),
+        '--jvmArgs', '-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m',
+        '--verbose',
+        '--threads', '4')
         .directory(project.projectDir)
         .redirectInput(ProcessBuilder.Redirect.INHERIT)
         .redirectOutput(ProcessBuilder.Redirect.INHERIT)

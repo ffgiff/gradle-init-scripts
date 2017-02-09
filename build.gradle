@@ -1,0 +1,11 @@
+repositories {
+    jcenter()
+}
+
+apply plugin:'groovy'
+apply plugin:'codenarc'
+
+codenarcMain.configFile = file('codenarc-config.groovy')
+codenarcTest.configFile = file('codenarc-config.groovy')
+
+sourceSets.main.groovy.srcDir '.'
