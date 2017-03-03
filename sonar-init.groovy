@@ -37,22 +37,21 @@ void setSonarProperties(final Project project) {
                     property 'sonar.java.binaries', variant.javaCompile.destinationDir
                     property 'sonar.java.libraries',
                             variant.javaCompile.classpath + files(project.android.bootClasspath)
-                    final String VARIANT_NAME = variant.name[0..1].toUpperCase() + variant.name[1..-1]
+                    final String VARIANT_NAME = variant.name[0].toUpperCase() + variant.name[1..-1]
                     final Task DEVICE_TEST_TASK =
                             project.tasks.findByName("connected${VARIANT_NAME}AndroidTest")
                     if (DEVICE_TEST_TASK != null &&
                             DEVICE_TEST_TASK.resultsDir.isDirectory() &&
                             DEVICE_TEST_TASK.resultsDir.listFiles().length > 0) {
-                        property 'sonar.tests', android.sourceSets.androidTest.java.srcDirs
+                        property 'sonar.tests', project.android.sourceSets.androidTest.java.srcDirs
                         property 'sonar.junit.reportsPath',
                                   DEVICE_TEST_TASK.resultsDir
                     }
                     final Task COVERAGE_REPORT_TASK =
                             project.tasks.findByName("create${VARIANT_NAME}AndroidTestCoverageReport")
                     if (COVERAGE_REPORT_TASK != null &&
-                            COVERAGE_REPORT_TASK.resultsDir.isDirectory() &&
-                            COVERAGE_REPORT_TASK.resultsDir.listFiles().length > 0) {
-                        property 'sonar.jacoco.reportPath',
+                            COVERAGE_REPORT_TASK.coverageFile.exists()) {
+                        property 'sonar.jacoco.reportPaths',
                                   COVERAGE_REPORT_TASK.coverageFile
                         property 'sonar.java.coveragePlugin', 'jacoco'
                         property 'sonar.dynamicAnalysis', 'reuseReports'
