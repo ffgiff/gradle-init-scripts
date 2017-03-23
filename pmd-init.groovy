@@ -1,5 +1,5 @@
 projectsEvaluated {
-    rootProject.subprojects {
+    ext.applyPmd = {
         if (project.hasProperty('android')) {
             setConfig(project)
             repositories {
@@ -18,6 +18,11 @@ projectsEvaluated {
 
             project.check.dependsOn += [project.tasks.pmd]
         }
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyPmd
+    } else {
+        rootProject.subprojects applyPmd
     }
 }
 

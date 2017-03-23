@@ -9,7 +9,7 @@ buildscript {
 }
 
 projectsEvaluated {
-    rootProject.subprojects {
+    ext.applyPitest = {
         if (project.hasProperty('android')) {
             task pitest {
                 // Meta-task, will dependOn pitestDebugUnitTest etc.
@@ -22,6 +22,11 @@ projectsEvaluated {
                 }
             }
         }
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyPitest
+    } else {
+        rootProject.subprojects applyPitest
     }
 }
 
@@ -44,7 +49,7 @@ void addPitestTask(project, testTask) {
                     '--targetClasses', project.processReleaseManifest.packageOverride + '.*',
                     '--sourceDirs', files(ext.testSource).asPath.replaceAll(':', ','),
                     '--jvmArgs', '-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m',
-                    '--verbose',
+//                    '--verbose',
                     '--threads', '4')
                     .directory(project.projectDir)
                     .redirectInput(ProcessBuilder.Redirect.INHERIT)

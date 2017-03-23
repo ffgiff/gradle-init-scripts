@@ -20,10 +20,15 @@ projectsEvaluated {
                 property 'sonar.sourceEncoding', 'UTF-8'
             }
         }
-        subprojects {
+        ext.applySonar = {
             if (project.hasProperty('android')) {
                 setSonarProperties(project)
             }
+        }
+        if (subprojects.isEmpty()) {
+            rootProject applySonar
+        } else {
+            subprojects applySonar
         }
     }
 }

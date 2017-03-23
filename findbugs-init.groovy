@@ -1,5 +1,5 @@
 projectsEvaluated {
-    rootProject.subprojects {
+    ext.applyFindBugs = {
         if (project.hasProperty('android')) {
             repositories {
                 mavenCentral()
@@ -19,6 +19,11 @@ projectsEvaluated {
             }
             project.check.dependsOn += [project.tasks.findbugs]
         }
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyFindBugs
+    } else {
+        rootProject.subprojects applyFindBugs
     }
 }
 
@@ -52,7 +57,7 @@ void addFindBugsTask(final Project project) {
         reports {
             //html.enabled = true
             xml {
-            //    enabled = false
+                //enabled = false
                 withMessages = true
             }
         }

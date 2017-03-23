@@ -11,15 +11,14 @@ rootProject {
 }
 
 projectsEvaluated {
-//    rootProject {
-//        if (null == subprojects || 0 == subprojects.size()) {
-//            addDoxygenTask rootProject
-//        } else {
-            rootProject.subprojects {
-                addDoxygenTask project
-            }
-//        }
-//    }
+    ext.applyDoxygen = {
+        addDoxygenTask project
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyDoxygen
+    } else {
+        rootProject.subprojects applyDoxygen
+    }
 }
 void addDoxygenTask(final Project project) {
     final File TEMPLATE = findConfig()

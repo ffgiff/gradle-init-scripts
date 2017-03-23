@@ -8,7 +8,7 @@
 // ext.sign = this.&signingFunction
 //
 projectsEvaluated {
-    rootProject.subprojects {
+    ext.applySigning = {
         if (project.hasProperty('android') &&
                 android.hasProperty('applicationVariants')) {
             project.android.applicationVariants.all { variant ->
@@ -18,6 +18,11 @@ projectsEvaluated {
                 }
             }
         }
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applySigning
+    } else {
+        rootProject.subprojects applySigning
     }
 }
 

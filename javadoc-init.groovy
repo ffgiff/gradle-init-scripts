@@ -1,8 +1,13 @@
 projectsEvaluated {
-    rootProject.subprojects {
+    ext.applyJavadoc = {
         if (project.hasProperty('android')) {
             JavadocHelper.addJavadocTask(project)
         }
+    }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyJavadoc
+    } else {
+        rootProject.subprojects applyJavadoc
     }
 }
 

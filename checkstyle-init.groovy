@@ -1,5 +1,7 @@
 projectsEvaluated {
-    rootProject.subprojects {
+//    rootProject.subprojects {
+//    rootProject {
+    ext.applyCheckStyle = {
         if (project.hasProperty('android')) {
             repositories {
                 mavenCentral()
@@ -26,6 +28,11 @@ projectsEvaluated {
             project.check.dependsOn project.tasks.checkstyle
         }
     }
+    if (rootProject.subprojects.isEmpty()) {
+        rootProject applyCheckStyle
+    } else {
+        rootProject.subprojects applyCheckStyle
+    }
 }
 //CheckStyle task
 void addCheckStyleTask(final Project project) {
@@ -34,27 +41,26 @@ void addCheckStyleTask(final Project project) {
     project.tasks.create(
             [name:TASK_NAME,
              type:Checkstyle,
-             dependsOn:[project.assembleDebug]])
-            {
-            final String CONFIG_NAME = 'checkstyle.xml'
-            // Find excludes filter
-            if (rootProject.file(CONFIG_NAME).exists()) {
-                configFile rootProject.file(CONFIG_NAME)
-            } else {
-                for (final File dir : startParameter.initScripts) {
-                    if (new File(dir.parentFile, CONFIG_NAME).exists()) {
-                        configFile new File(dir.parentFile, CONFIG_NAME)
-                        break
-                    }
+             dependsOn:[project.assembleDebug]]) {
+        final String CONFIG_NAME = 'checkstyle.xml'
+        // Find excludes filter
+        if (rootProject.file(CONFIG_NAME).exists()) {
+            configFile rootProject.file(CONFIG_NAME)
+        } else {
+            for (final File dir : startParameter.initScripts) {
+                if (new File(dir.parentFile, CONFIG_NAME).exists()) {
+                    configFile new File(dir.parentFile, CONFIG_NAME)
+                    break
                 }
             }
-            source = [project.android.sourceSets.main.java.srcDirs,
-                      project.android.sourceSets.androidTest.java.srcDirs,
-                      project.android.sourceSets.test.java.srcDirs]
-            include '**/*.java'
-            exclude '**/gen/**'
-            classpath = project.configurations.compile +
-                        files(project.android.bootClasspath)
-            ignoreFailures = true // Don't report error if there are bugs found.
         }
+        source = [project.android.sourceSets.main.java.srcDirs,
+                  project.android.sourceSets.androidTest.java.srcDirs,
+                  project.android.sourceSets.test.java.srcDirs]
+        include '**/*.java'
+        exclude '**/gen/**'
+        classpath = project.configurations.compile +
+                    files(project.android.bootClasspath)
+        ignoreFailures = true // Don't report error if there are bugs found.
+    }
 }
