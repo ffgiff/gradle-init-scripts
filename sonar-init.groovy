@@ -55,6 +55,7 @@ void setSonarProperties(final Project project) {
                     final Task COVERAGE_REPORT_TASK =
                             project.tasks.findByName("create${VARIANT_NAME}AndroidTestCoverageReport")
                     if (COVERAGE_REPORT_TASK != null &&
+                            COVERAGE_REPORT_TASK.coverageFile != null &&
                             COVERAGE_REPORT_TASK.coverageFile.exists()) {
                         property 'sonar.jacoco.reportPaths',
                                   COVERAGE_REPORT_TASK.coverageFile
