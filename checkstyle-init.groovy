@@ -1,6 +1,4 @@
 projectsEvaluated {
-//    rootProject.subprojects {
-//    rootProject {
     ext.applyCheckStyle = {
         if (project.hasProperty('android')) {
             repositories {
@@ -41,7 +39,7 @@ void addCheckStyleTask(final Project project) {
     project.tasks.create(
             [name:TASK_NAME,
              type:Checkstyle,
-             dependsOn:[project.assembleDebug]]) {
+             dependsOn:[project.assembleDebug],]) {
         final String CONFIG_NAME = 'checkstyle.xml'
         // Find excludes filter
         if (rootProject.file(CONFIG_NAME).exists()) {
@@ -56,7 +54,7 @@ void addCheckStyleTask(final Project project) {
         }
         source = [project.android.sourceSets.main.java.srcDirs,
                   project.android.sourceSets.androidTest.java.srcDirs,
-                  project.android.sourceSets.test.java.srcDirs]
+                  project.android.sourceSets.test.java.srcDirs,]
         include '**/*.java'
         exclude '**/gen/**'
         classpath = project.configurations.compile +

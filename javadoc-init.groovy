@@ -19,7 +19,7 @@ static void addJavadocTask(final Project project) {
 //        task javadoc (type: Javadoc, dependsOn: project.tasks.assembleDebug) {
     project.tasks.create([name:'javadoc',
                           type:Javadoc,
-                          dependsOn:[project.assembleRelease]]) {
+                          dependsOn:[project.assembleRelease],]) {
         classpath = project.configurations.compile +
                     project.configurations.testCompile +
                     project.configurations.androidTestCompile +
@@ -33,13 +33,13 @@ static void addJavadocTask(final Project project) {
         exclude '**/*.aj'
         source = [project.android.sourceSets.main.java.srcDirs,
                   project.android.sourceSets.androidTest.java.srcDirs,
-                  project.android.sourceSets.test.java.srcDirs]
+                  project.android.sourceSets.test.java.srcDirs,]
 //        source = [android.sourceSets.androidTest.java.srcDirs]
         options.setLinksOffline([new JavadocOfflineLink(
                 'https://developer.android.com/reference',
                 project.android.sdkDirectory.absolutePath
                         .replace(File.separatorChar, (char)'/')
-                    + '/docs/reference')])
+                    + '/docs/reference'),])
         options.encoding('utf-8')
     }
 }

@@ -12,7 +12,7 @@ projectsEvaluated {
             for (final String taskProperty : ['assembleDebugAndroidTest',
                                               'assembleAndroidTest',
                                               'assembleDebugUnitTest',
-                                              'assembleUnitTest']) {
+                                              'assembleUnitTest',]) {
                 if (project.hasProperty(taskProperty)) {
                     project.tasks.findbugs.dependsOn += [taskProperty]
                 }
@@ -33,7 +33,7 @@ void addFindBugsTask(final Project project) {
     project.apply plugin:TASK_NAME
     project.tasks.create([name:TASK_NAME,
                           type:FindBugs,
-                          dependsOn:[project.assembleRelease]]) {
+                          dependsOn:[project.assembleRelease],]) {
         // Find excludes filter
         final String CONFIG_NAME = 'findbugs-filter.xml'
         if (rootProject.file(CONFIG_NAME).exists()) {
@@ -50,7 +50,7 @@ void addFindBugsTask(final Project project) {
         classes = getDebugSources(project)
         source = [project.android.sourceSets.main.java.srcDirs,
                   project.android.sourceSets.androidTest.java.srcDirs,
-                  project.android.sourceSets.test.java.srcDirs]
+                  project.android.sourceSets.test.java.srcDirs,]
         classpath = project.configurations.compile + files(project.android.bootClasspath)
         effort = 'max'
         reportLevel = 'low'

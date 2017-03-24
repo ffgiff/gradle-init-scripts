@@ -93,10 +93,10 @@ ruleset {
     InvertedIfElse
     LongLiteralWithLowerCaseL
     NoDef
-//    NoTabCharacter
+    NoTabCharacter
     ParameterReassignment
     TernaryCouldBeElvis
-//    TrailingComma
+    TrailingComma
     VectorIsObsolete
 
     // rulesets/design.xml

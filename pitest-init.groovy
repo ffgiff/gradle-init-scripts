@@ -32,7 +32,7 @@ projectsEvaluated {
 
 void addPitestTask(project, testTask) {
     project.tasks.create([name:"pi$testTask",
-                          dependsOn:["$testTask"]]) {
+                          dependsOn:["$testTask"],]) {
         doLast {
             ext.testSource = project.android.sourceSets.main.java.srcDirs
             project.android.unitTestVariants.matching
@@ -46,7 +46,7 @@ void addPitestTask(project, testTask) {
                                    project.tasks[testTask].classpath).asPath,
                     'org.pitest.mutationtest.commandline.MutationCoverageReport',
                     '--reportDir', project.reportsDir.path,
-                    '--targetClasses', project.processReleaseManifest.packageOverride + '.*',
+                    '--targetClasses', "${project.processReleaseManifest.packageOverride}.*",
                     '--sourceDirs', files(ext.testSource).asPath.replaceAll(':', ','),
                     '--jvmArgs', '-XX:+CMSClassUnloadingEnabled,-XX:MaxPermSize=2048m',
 //                    '--verbose',
