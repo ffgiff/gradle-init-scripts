@@ -30,6 +30,8 @@ void addDoxygenTask(final Project project) {
                 template TEMPLATE.absolutePath
             }
 //            dependsOn project.assembleDebug
+            group 'Documentation'
+            description 'Generates documentation using doxygen tool.'
             dependsOn project.assembleRelease
             project_number project.android.defaultConfig.versionName +
                     " (${project.android.defaultConfig.versionCode})"

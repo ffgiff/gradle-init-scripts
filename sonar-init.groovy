@@ -15,6 +15,7 @@ projectsEvaluated {
     rootProject {
         apply plugin:'org.sonarqube'
 
+        tasks.sonarqube.group 'Verification'
         sonarqube {
             properties {
                 property 'sonar.sourceEncoding', 'UTF-8'

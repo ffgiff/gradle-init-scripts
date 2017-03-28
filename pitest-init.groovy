@@ -13,6 +13,8 @@ projectsEvaluated {
         if (project.hasProperty('android')) {
             task pitest {
                 // Meta-task, will dependOn pitestDebugUnitTest etc.
+                group 'Verification'
+                description 'Runs mutation tests using pitest tool.'
             }
             project.tasks.test.dependsOn.each { testTask ->
                 if (testTask.metaClass.respondsTo(testTask, 'startsWith') &&

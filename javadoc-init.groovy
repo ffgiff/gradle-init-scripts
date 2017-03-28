@@ -19,6 +19,8 @@ static void addJavadocTask(final Project project) {
 //        task javadoc (type: Javadoc, dependsOn: project.tasks.assembleDebug) {
     project.tasks.create([name:'javadoc',
                           type:Javadoc,
+                          group:'Documentation',
+                          description:'Generates documentation using javadoc tool.',
                           dependsOn:[project.assembleRelease],]) {
         classpath = project.configurations.compile +
                     project.configurations.testCompile +
