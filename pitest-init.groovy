@@ -3,8 +3,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.pitest:pitest:1.1.10'
-        classpath 'org.pitest:pitest-command-line:1.1.10'
+        classpath 'org.pitest:pitest:1.1.11'
+        classpath 'org.pitest:pitest-command-line:1.1.11'
     }
 }
 
