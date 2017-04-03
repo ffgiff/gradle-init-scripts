@@ -50,7 +50,7 @@ String getAndroidProperty(final String prop) {
         result = READER.readLine()
         READER.close()
     } catch (final IOException e) {
-        project.logger.log(0, e.localizedMessage, e)
+        project.logger.log(LogLevel.ERROR, e.localizedMessage, e)
     }
     result
 }

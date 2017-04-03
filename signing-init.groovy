@@ -20,7 +20,7 @@ settingsEvaluated { settings ->
             }
             READER.close()
         } catch (final IOException e) {
-            rootProject.logger.log(LogLevel.ERROR, e.getLocalizedMessage, e)
+            logger.log(LogLevel.ERROR, e.localizedMessage, e)
         }
     }
 }
