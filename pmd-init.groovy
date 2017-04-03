@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 projectsEvaluated {
     ext.applyPmd = {
         if (project.hasProperty('android')) {

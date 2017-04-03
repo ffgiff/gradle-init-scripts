@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 //Doxygen task
 rootProject {
     buildscript {

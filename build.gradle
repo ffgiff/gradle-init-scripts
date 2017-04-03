@@ -9,3 +9,8 @@ codenarcMain.configFile = file('codenarc-config.groovy')
 codenarcTest.configFile = file('codenarc-config.groovy')
 
 sourceSets.main.groovy.srcDir '.'
+
+dependencies {
+    compile gradleApi()
+    compile localGroovy()
+}

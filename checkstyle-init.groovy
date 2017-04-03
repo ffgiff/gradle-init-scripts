@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 projectsEvaluated {
     ext.applyCheckStyle = {
         if (project.hasProperty('android')) {

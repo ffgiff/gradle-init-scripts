@@ -1,3 +1,6 @@
+import org.gradle.api.Project
+import org.gradle.api.file.FileCollection
+
 projectsEvaluated {
     ext.applyFindBugs = {
         if (project.hasProperty('android')) {
