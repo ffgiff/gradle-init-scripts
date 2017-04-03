@@ -1,5 +1,7 @@
 # Gradle init scripts for Android
 
+[![Build Status](https://travis-ci.org/vertu20140207/gradle-init-scripts.svg?branch=master)](https://travis-ci.org/vertu20140207/gradle-init-scripts)
+
 These init scripts augment an Android build by adding support for:
 
 - Static checkers
