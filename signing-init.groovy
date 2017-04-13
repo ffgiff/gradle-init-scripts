@@ -10,9 +10,8 @@ settingsEvaluated { settings ->
                 if (line.matches('^\\s*apply\\s+plugin\\s*:\\s*[\'"]com.android.application[\'"]\\s*$')) {
                     it.setBuildFileName(
                             FileSystems.default.getPath(it.dir.toString())
-                                    .relativize(FileSystems.default.getPath(new File(
-                                            buildscript.sourceFile.parentFile,
-                                            'fix-signing-config.groovy').toString()))
+                                    .relativize(FileSystems.default.getPath(
+                                            file('fix-signing-config.groovy').toString()))
                                     .toString())
                     break
                 }
