@@ -7,11 +7,11 @@ projectsEvaluated {
             repositories {
                 jcenter()
             }
+
+            addJdependTask project
+
+            project.check.dependsOn += [project.tasks.jdepend]
         }
-
-        addJdependTask project
-
-        project.check.dependsOn += [project.tasks.jdepend]
     }
     if (rootProject.subprojects.isEmpty()) {
         rootProject applyJdepend

@@ -1,26 +1,16 @@
 import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 
+ext.FINDBUGS = 'findbugs'
 projectsEvaluated {
     ext.applyFindBugs = {
         if (project.hasProperty('android')) {
             repositories {
                 mavenCentral()
             }
-
-            addFindBugsTask project
-
-            // Flavourless projects need assembleDebugAndroidTest
-            // Flavoured projects need assembleAndroidTest
-            for (final String taskProperty : ['assembleDebugAndroidTest',
-                                              'assembleAndroidTest',
-                                              'assembleDebugUnitTest',
-                                              'assembleUnitTest',]) {
-                if (project.hasProperty(taskProperty)) {
-                    project.tasks.findbugs.dependsOn += [taskProperty]
-                }
+            if (!project.hasProperty(FINDBUGS)) {
+                addFindBugsTask project
             }
-            project.check.dependsOn += [project.tasks.findbugs]
         }
     }
     if (rootProject.subprojects.isEmpty()) {
@@ -32,9 +22,8 @@ projectsEvaluated {
 
 //Findbugs task
 void addFindBugsTask(final Project project) {
-    final String TASK_NAME = 'findbugs'
-    project.apply plugin:TASK_NAME
-    project.tasks.create([name:TASK_NAME,
+    project.apply plugin:FINDBUGS
+    project.tasks.create([name:FINDBUGS,
                           type:FindBugs,
                           dependsOn:[project.assembleRelease],]) {
         // Find excludes filter
@@ -66,6 +55,17 @@ void addFindBugsTask(final Project project) {
         }
         ignoreFailures = true // Don't report error if there are bugs found.
     }
+    // Flavourless projects need assembleDebugAndroidTest
+    // Flavoured projects need assembleAndroidTest
+    for (final String taskProperty : ['assembleDebugAndroidTest',
+                                      'assembleAndroidTest',
+                                      'assembleDebugUnitTest',
+                                      'assembleUnitTest',]) {
+        if (project.hasProperty(taskProperty)) {
+            project.tasks.findbugs.dependsOn += [taskProperty]
+        }
+    }
+    project.check.dependsOn += [project.tasks.findbugs]
 }
 
 FileCollection getDebugSources(final Project project) {

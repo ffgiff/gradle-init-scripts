@@ -1,31 +1,15 @@
 import org.gradle.api.Project
 
+ext.CHECKSTYLE = 'checkstyle'
 projectsEvaluated {
     ext.applyCheckStyle = {
         if (project.hasProperty('android')) {
             repositories {
                 mavenCentral()
             }
-            addCheckStyleTask project
-            // Flavourless projects need assembleDebugAndroidTest
-            // Flavoured projects need assembleAndroidTest
-            final String[] DEVICE_TEST_TASKS =
-                ['assembleDebugAndroidTest', 'assembleAndroidTest']
-            final String[] HOST_TEST_TASKS =
-                ['assembleDebugUnitTest', 'assembleUnitTest']
-            for (final String task : DEVICE_TEST_TASKS) {
-                if (project.hasProperty(task)) {
-                    project.tasks.checkstyle.dependsOn task
-                    break
-                }
+            if (!project.hasProperty(CHECKSTYLE)) {
+                addCheckStyleTask project
             }
-            for (final String task : HOST_TEST_TASKS) {
-                if (project.hasProperty(task)) {
-                    project.tasks.checkstyle.dependsOn task
-                    break
-                }
-            }
-            project.check.dependsOn project.tasks.checkstyle
         }
     }
     if (rootProject.subprojects.isEmpty()) {
@@ -36,10 +20,9 @@ projectsEvaluated {
 }
 //CheckStyle task
 void addCheckStyleTask(final Project project) {
-    final String TASK_NAME = 'checkstyle'
-    project.apply plugin:TASK_NAME
+    project.apply plugin:CHECKSTYLE
     project.tasks.create(
-            [name:TASK_NAME,
+            [name:CHECKSTYLE,
              type:Checkstyle,
              dependsOn:[project.assembleDebug],]) {
         final String CONFIG_NAME = 'checkstyle.xml'
@@ -63,4 +46,23 @@ void addCheckStyleTask(final Project project) {
                     files(project.android.bootClasspath)
         ignoreFailures = true // Don't report error if there are bugs found.
     }
+    // Flavourless projects need assembleDebugAndroidTest
+    // Flavoured projects need assembleAndroidTest
+    final String[] DEVICE_TEST_TASKS =
+        ['assembleDebugAndroidTest', 'assembleAndroidTest']
+    final String[] HOST_TEST_TASKS =
+        ['assembleDebugUnitTest', 'assembleUnitTest']
+    for (final String task : DEVICE_TEST_TASKS) {
+        if (project.hasProperty(task)) {
+            project.tasks.checkstyle.dependsOn task
+            break
+        }
+    }
+    for (final String task : HOST_TEST_TASKS) {
+        if (project.hasProperty(task)) {
+            project.tasks.checkstyle.dependsOn task
+            break
+        }
+    }
+    project.check.dependsOn project.tasks.checkstyle
 }

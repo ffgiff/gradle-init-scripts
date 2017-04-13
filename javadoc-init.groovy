@@ -6,7 +6,9 @@ import org.gradle.external.javadoc.JavadocOfflineLink
 projectsEvaluated {
     ext.applyJavadoc = {
         if (project.hasProperty('android')) {
-            JavadocHelper.addJavadocTask(project)
+            if (!project.hasProperty('javadoc')) {
+                JavadocHelper.addJavadocTask(project)
+            }
         }
     }
     if (rootProject.subprojects.isEmpty()) {
