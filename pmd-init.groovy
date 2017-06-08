@@ -1,13 +1,15 @@
 import org.gradle.api.Project
 
+ext.PMD = 'pmd'
 projectsEvaluated {
     ext.applyPmd = {
-        if (project.hasProperty('android')) {
+        if (project.hasProperty('android')
+                && !project.hasProperty(PMD)) {
             setConfig(project)
             repositories {
                 mavenCentral()
             }
-            apply plugin:'pmd'
+            apply plugin:PMD
 
             //PMD task
             task pmd(type:Pmd) {
