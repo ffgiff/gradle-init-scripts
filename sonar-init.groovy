@@ -9,7 +9,7 @@ rootProject {
             }
         }
         dependencies {
-            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2.1'
+            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5'
         }
     }
 }
