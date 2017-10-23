@@ -58,7 +58,11 @@ final class JavadocHelper {
         project.android."${variantType}".all { variant ->
             if (variant.buildType.name == 'release') {
                 classpath += project.files("${variant.javaCompile.destinationDir}")
-                if ("${variantType}" == APP_VARIANTS || "${variantType}" == LIB_VARIANTS) {
+                if ("${variantType}" == APP_VARIANTS) {
+                    variant.getCompileClasspath(null).each { lib ->
+                        classpath += project.files(lib)
+                    }
+                } else if ("${variantType}" == LIB_VARIANTS) {
                     classpath += variant.javaCompile.classpath
                 }
             }
