@@ -9,7 +9,7 @@ rootProject {
             }
         }
         dependencies {
-            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.5'
+            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
         }
     }
 }
@@ -27,6 +27,7 @@ projectsEvaluated {
         ext.applySonar = {
             if (project.hasProperty('android')) {
                 setSonarProperties(project)
+                rootProject.tasks.sonarqube.dependsOn project.tasks.assemble
             }
         }
         if (subprojects.isEmpty()) {
@@ -53,7 +54,7 @@ void setSonarProperties(final Project project) {
                             DEVICE_TEST_TASK.resultsDir.isDirectory() &&
                             DEVICE_TEST_TASK.resultsDir.listFiles().length > 0) {
                         property 'sonar.tests', project.android.sourceSets.androidTest.java.srcDirs
-                        property 'sonar.junit.reportsPath',
+                        property 'sonar.junit.reportPaths',
                                   DEVICE_TEST_TASK.resultsDir
                     }
                     final Task COVERAGE_REPORT_TASK =

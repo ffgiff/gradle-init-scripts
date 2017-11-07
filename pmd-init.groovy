@@ -17,6 +17,7 @@ projectsEvaluated {
                 source = [android.sourceSets.main.java.srcDirs,
                           android.sourceSets.androidTest.java.srcDirs,
                           android.sourceSets.test.java.srcDirs,]
+                exclude '**/*.kt'
                 ignoreFailures = true // Don't report error if there are bugs found.
             }
 
