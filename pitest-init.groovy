@@ -1,3 +1,5 @@
+import org.gradle.api.Project
+
 buildscript {
     repositories {
         jcenter()
@@ -32,7 +34,7 @@ projectsEvaluated {
     }
 }
 
-void addPitestTask(project, testTask) {
+void addPitestTask(final Project project, final String testTask) {
     project.tasks.create([name:"pi$testTask",
                           dependsOn:["$testTask"],]) {
         doLast {

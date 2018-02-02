@@ -9,7 +9,7 @@ rootProject {
             }
         }
         dependencies {
-            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
+            classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.1'
         }
     }
 }
@@ -37,7 +37,13 @@ projectsEvaluated {
         }
     }
 }
+
 void setSonarProperties(final Project project) {
+    setApplicationProperties(project)
+    setTestProperties(project)
+}
+
+void setApplicationProperties(final Project project) {
     project.sonarqube.properties {
         property 'sonar.projectBaseDir', rootProject.projectDir.absolutePath
         if (!project.android.sourceSets.main.java.sourceFiles.isEmpty()) {
@@ -72,3 +78,16 @@ void setSonarProperties(final Project project) {
         }
     }
 }
+
+void setTestProperties(final Project project) {
+    if (project.android.hasProperty('testVariants')) {
+        project.sonarqube.properties {
+            project.android.testVariants.all { variant ->
+                property 'sonar.java.test.binaries', variant.javaCompile.destinationDir
+                property 'sonar.java.test.libraries',
+                        variant.javaCompile.classpath + files(project.android.bootClasspath)
+            }
+        }
+    }
+}
+
