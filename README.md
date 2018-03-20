@@ -7,6 +7,7 @@ These init scripts augment an Android build by adding support for:
 - Static checkers
   - Checkstyle
   - Findbugs
+  - Ktlint
   - Pmd
   - Sonar
 - Documentation
@@ -21,7 +22,7 @@ These init scripts augment an Android build by adding support for:
 
 # Usage
 
-Add checkstyle, findbugs and pmd to the standard Android/gradle `check` task.
+Add checkstyle, findbugs, ktlint and pmd to the standard Android/gradle `check` task.
 ~~~~
 ./gradlew -I init.groovy build
 ~~~~
