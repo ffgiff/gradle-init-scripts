@@ -6,21 +6,18 @@ final boolean ONE_CONNECTED_DEVICE = 0 ==
         new ProcessBuilder(project.android.adbExe.path, 'get-serialno')
                 .start()
                 .waitFor()
-String signCert =
-        (project.hasProperty('signCert')) ? signCert = project.signCert : ''
-String signFor =
-        (project.hasProperty('signFor')) ? signFor = project.signFor : 'androiddebugkey'
-if (ONE_CONNECTED_DEVICE || null != System.getenv('ANDROID_SERIAL')) {
-    signFor = getAndroidProperty('ro.product.name') + '_' + getAndroidProperty('ro.build.type')
-}
+final String SIGN_CERT = (project.hasProperty('signCert')) ? project.signCert : ''
+final String SIGN_FOR = (project.hasProperty('signFor'))
+        ? project.signFor : (ONE_CONNECTED_DEVICE || null != System.getenv('ANDROID_SERIAL'))
+                ? getAndroidProperty('ro.product.name') + '_' + getAndroidProperty('ro.build.type') : 'androiddebugkey'
 
 project.android {
     signingConfigs {
         signingConfig {
             storeFile new File(buildscript.sourceFile.parentFile,
-                    "${signCert}.keystore")
+                    "${SIGN_CERT}.keystore")
             storePassword 'android'
-            keyAlias signFor
+            keyAlias SIGN_FOR
             keyPassword storePassword
         }
     }
