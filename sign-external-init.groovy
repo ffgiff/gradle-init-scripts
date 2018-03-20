@@ -7,6 +7,18 @@
 // }
 // ext.sign = this.&signingFunction
 //
+import org.gradle.api.Project
+
+buildscript {
+    repositories {
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+    }
+}
+
 projectsEvaluated {
     ext.applySigning = {
         if (project.hasProperty('android') &&
@@ -26,7 +38,7 @@ projectsEvaluated {
     }
 }
 
-void signApk(project, variant) {
+void signApk(final Project project, final Object variant) {
     variant.assemble.doLast {
         variant.outputs.each { output ->
             if (project.hasProperty('signingClosure')) {

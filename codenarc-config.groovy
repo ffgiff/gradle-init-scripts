@@ -88,15 +88,21 @@ ruleset {
     // rulesets/convention.xml
     ConfusingTernary
     CouldBeElvis
+    CouldBeSwitchStatement
+    //FieldTypeRequired
     HashtableIsObsolete
     IfStatementCouldBeTernary
+    //InvertedCondition
     InvertedIfElse
     LongLiteralWithLowerCaseL
+    //MethodParameterTypeRequired
+    //MethodReturnTypeRequired
     NoDef
     NoTabCharacter
     ParameterReassignment
     TernaryCouldBeElvis
     TrailingComma
+    //VariableTypeRequired
     VectorIsObsolete
 
     // rulesets/design.xml
@@ -130,9 +136,10 @@ ruleset {
     DuplicateStringLiteral
 
     // rulesets/enhanced.xml
-    //CloneWithoutCloneable
-    //JUnitAssertEqualsConstantActualValue
-    //UnsafeImplementationAsMap
+    CloneWithoutCloneable
+    JUnitAssertEqualsConstantActualValue
+    //MissingOverrideAnnotation
+    UnsafeImplementationAsMap
 
     // rulesets/exceptions.xml
     CatchArrayIndexOutOfBoundsException
@@ -158,6 +165,8 @@ ruleset {
 
     // rulesets/formatting.xml
     BlankLineBeforePackage
+    //BlockEndsWithBlankLine
+    //BlockStartsWithBlankLine
     BracesForClass
     BracesForForLoop
     BracesForIfElse
@@ -167,6 +176,7 @@ ruleset {
     ClosureStatementOnOpeningLineOfMultipleLineClosure
     ConsecutiveBlankLines
     FileEndsWithoutNewline
+    //Indentation
     LineLength
     MissingBlankLineAfterImports
     MissingBlankLineAfterPackage
@@ -207,7 +217,6 @@ ruleset {
     GrailsMassAssignment
     GrailsPublicControllerMethod
     GrailsServletContextReference
-    GrailsSessionReference   // DEPRECATED
     GrailsStatelessService
 
     // rulesets/groovyism.xml
@@ -316,7 +325,7 @@ ruleset {
     // rulesets/security.xml
     FileCreateTempFile
     InsecureRandom
-//    JavaIoPackageAccess
+    //JavaIoPackageAccess
     NonFinalPublicField
     NonFinalSubclassOfSensitiveInterface
     ObjectFinalize
@@ -331,7 +340,6 @@ ruleset {
     SerializableClassMustDefineSerialVersionUID
 
     // rulesets/size.xml
-    AbcComplexity   // DEPRECATED: Use the AbcMetric rule instead. Requires the GMetrics jar
     AbcMetric   // Requires the GMetrics jar
     ClassSize
     //CrapMetric   // Requires the GMetrics jar and a Cobertura coverage file
@@ -383,6 +391,7 @@ ruleset {
     UnnecessarySafeNavigationOperator
     UnnecessarySelfAssignment
     UnnecessarySemicolon
+    //UnnecessarySetter
     UnnecessaryStringInstantiation
     UnnecessarySubstring
     UnnecessaryTernaryExpression
@@ -397,4 +406,5 @@ ruleset {
     UnusedPrivateMethod
     UnusedPrivateMethodParameter
     UnusedVariable
+
 }
