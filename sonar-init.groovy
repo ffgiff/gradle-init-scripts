@@ -50,26 +50,28 @@ void setApplicationProperties(final Project project) {
             property 'sonar.sources', project.android.sourceSets.main.java.srcDirs
             if (project.android.hasProperty('applicationVariants')) {
                 project.android.applicationVariants.all { variant ->
-                    property 'sonar.java.binaries', variant.javaCompile.destinationDir
+                    property 'sonar.java.binaries', files(variant.javaCompile.destinationDir) +
+                            file("${project.buildDir}/tmp/kotlin-classes/${variant.name}")
                     property 'sonar.java.libraries',
                             variant.javaCompile.classpath + files(project.android.bootClasspath)
                     final String VARIANT_NAME = variant.name[0].toUpperCase() + variant.name[1..-1]
                     final Task DEVICE_TEST_TASK =
                             project.tasks.findByName("connected${VARIANT_NAME}AndroidTest")
-                    if (DEVICE_TEST_TASK != null &&
-                            DEVICE_TEST_TASK.resultsDir.isDirectory() &&
-                            DEVICE_TEST_TASK.resultsDir.listFiles().length > 0) {
-                        property 'sonar.tests', project.android.sourceSets.androidTest.java.srcDirs
-                        property 'sonar.junit.reportPaths',
-                                  DEVICE_TEST_TASK.resultsDir
+                    if (DEVICE_TEST_TASK?.resultsDir?.isDirectory() &&
+                            DEVICE_TEST_TASK?.resultsDir?.listFiles()?.length) {
+                        final String TESTS_PROPERTY = 'sonar.tests'
+                        final String JUNIT_PATH_PROPERTY = 'sonar.junit.reportPaths'
+                        properties[TESTS_PROPERTY] = properties[TESTS_PROPERTY] ?: [] +
+                                "${project.android.sourceSets.androidTest.java.srcDirs},"
+                        properties[JUNIT_PATH_PROPERTY] = properties[JUNIT_PATH_PROPERTY] ?: [] +
+                                "${DEVICE_TEST_TASK.resultsDir},"
                     }
                     final Task COVERAGE_REPORT_TASK =
                             project.tasks.findByName("create${VARIANT_NAME}AndroidTestCoverageReport")
-                    if (COVERAGE_REPORT_TASK != null &&
-                            COVERAGE_REPORT_TASK.coverageFile != null &&
-                            COVERAGE_REPORT_TASK.coverageFile.exists()) {
-                        property 'sonar.jacoco.reportPaths',
-                                  COVERAGE_REPORT_TASK.coverageFile
+                    if (COVERAGE_REPORT_TASK?.coverageFile?.exists()) {
+                        final String JACOCO_PATH_PROPERTY = 'sonar.jacoco.reportPaths'
+                        properties[JACOCO_PATH_PROPERTY] = properties[JACOCO_PATH_PROPERTY] ?: [] +
+                                "${COVERAGE_REPORT_TASK.coverageFile},"
                         property 'sonar.java.coveragePlugin', 'jacoco'
                         property 'sonar.dynamicAnalysis', 'reuseReports'
                     }
