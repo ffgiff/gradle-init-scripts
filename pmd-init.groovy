@@ -1,7 +1,7 @@
 import org.gradle.api.Project
 
 ext.PMD = 'pmd'
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyPmd = {
         if (project.hasProperty('android')
                 && !project.hasProperty(PMD)) {

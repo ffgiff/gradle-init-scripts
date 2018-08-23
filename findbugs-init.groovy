@@ -2,7 +2,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 
 ext.FINDBUGS = 'findbugs'
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyFindBugs = {
         if (project.hasProperty('android')) {
             repositories {

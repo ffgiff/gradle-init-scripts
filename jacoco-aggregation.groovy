@@ -2,7 +2,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.FileCollection
 
 ext.COVERAGE_REPORT_TASK_NAME = 'createDebugCoverageReport'
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyJacocoTestReport = {
         if (project.hasProperty('android')) {
             if (project.tasks.findByName(COVERAGE_REPORT_TASK_NAME)) {

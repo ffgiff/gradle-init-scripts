@@ -1,7 +1,7 @@
 import org.gradle.api.Project
 
 ext.CHECKSTYLE = 'checkstyle'
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyCheckStyle = {
         if (project.hasProperty('android')) {
             repositories {

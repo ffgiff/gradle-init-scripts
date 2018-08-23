@@ -10,7 +10,7 @@ buildscript {
     }
 }
 
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyPitest = {
         if (project.hasProperty('android')) {
             task pitest {
