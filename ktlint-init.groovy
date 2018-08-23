@@ -8,7 +8,7 @@ buildscript {
         classpath 'com.github.shyiko:ktlint:0.19.0'
     }
 }
-projectsEvaluated {
+gradle.projectsEvaluated {
     ext.applyKtlint = {
         if (project.hasProperty('android')) {
             addKtlintTask(project)
@@ -32,6 +32,6 @@ void addKtlintTask(final Project project) {
         description 'Check Kotlin code style.'
         ignoreExitValue true
         main 'com.github.shyiko.ktlint.Main'
-        source.each { args "${it.element.absolutePath}/**/*.kt" }
+        source.each { args "${it.absolutePath}/**/*.kt" }
     }
 }
