@@ -17,12 +17,15 @@ gradle.projectsEvaluated {
     }
 }
 
+ext.FILE_FILTER =
+        ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*',]
+
 // Jacoco aggregation report
 void addJacocoTestReport(final Project project) {
     project.apply plugin:'jacoco'
 
     project.jacoco {
-        toolVersion = '0.8.1'
+        toolVersion = '0.8.2'
     }
 
     project.tasks.withType(Test) {
@@ -37,10 +40,9 @@ void addJacocoTestReport(final Project project) {
             html.enabled = true
         }
 
-        final List<String> FILE_FILTER =
-                ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*',]
         final FileCollection DEBUG_TREE =
-                fileTree(dir:"$project.buildDir/tmp/kotlin-classes/debug", excludes:FILE_FILTER)
+                fileTree(dir:"$project.buildDir/tmp/kotlin-classes/debug", excludes:FILE_FILTER) +
+                getDebugSources(project)
         final String MAIN_SRC = "$project.projectDir/src/main/java"
 
         sourceDirectories = files([MAIN_SRC])
@@ -50,3 +52,18 @@ void addJacocoTestReport(final Project project) {
         ])
     }
 }
+
+FileCollection getDebugSources(final Project project) {
+    FileCollection classes = project.files()
+    for (final String variantType : ['applicationVariants', 'libraryVariants', 'testVariants']) {
+        if (project.android.hasProperty(variantType)) {
+            project.android."${variantType}".all { variant ->
+                if (variant.buildType.name == 'debug') {
+                    classes += fileTree(dir:"${variant.javaCompile.destinationDir}", excludes:FILE_FILTER)
+                }
+            }
+        }
+    }
+    classes
+}
+
