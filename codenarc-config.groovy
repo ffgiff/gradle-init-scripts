@@ -136,10 +136,10 @@ ruleset {
     DuplicateStringLiteral
 
     // rulesets/enhanced.xml
-    CloneWithoutCloneable
-    JUnitAssertEqualsConstantActualValue
+    //CloneWithoutCloneable
+    //JUnitAssertEqualsConstantActualValue
     //MissingOverrideAnnotation
-    UnsafeImplementationAsMap
+    //UnsafeImplementationAsMap
 
     // rulesets/exceptions.xml
     CatchArrayIndexOutOfBoundsException
