@@ -40,9 +40,9 @@ void addFindBugsTask(final Project project) {
         }
         //excludeFilter script.file(CONFIG_NAME)
         classes = getDebugSources(project)
-        source = [project.android.sourceSets.main.java.srcDirs,
-                  project.android.sourceSets.androidTest.java.srcDirs,
-                  project.android.sourceSets.test.java.srcDirs,]
+        source = ['main', 'androidTest', 'test'].collect {
+            project.android.sourceSets.findByName(it)
+        }.find { null != it }.collect { it.java.srcDirs }
         classpath = project.configurations.compile + files(project.android.bootClasspath)
         effort = 'max'
         reportLevel = 'low'
