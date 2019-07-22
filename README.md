@@ -1,6 +1,6 @@
 # Gradle init scripts for Android
 
-[![Build Status](https://travis-ci.org/ffgiff/gradle-init-scripts.svg?branch=master)](https://travis-ci.org/ffgiff/gradle-init-scripts)
+[![Build Status](https://travis-ci.com/ffgiff/gradle-init-scripts.svg?branch=master)](https://travis-ci.org/ffgiff/gradle-init-scripts)
 
 These init scripts augment an Android build by adding support for:
 
