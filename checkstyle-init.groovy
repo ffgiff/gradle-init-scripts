@@ -37,9 +37,9 @@ void addCheckStyleTask(final Project project) {
                 }
             }
         }
-        source = [project.android.sourceSets.main.java.srcDirs,
-                  project.android.sourceSets.androidTest.java.srcDirs,
-                  project.android.sourceSets.test.java.srcDirs,]
+        source = ['main', 'androidTest', 'test'].collect {
+            project.android.sourceSets.findByName(it)
+        }.find { null != it }.collect { it.java.srcDirs }
         include '**/*.java'
         exclude '**/gen/**'
         classpath = project.configurations.compile +

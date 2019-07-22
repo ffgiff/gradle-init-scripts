@@ -26,9 +26,9 @@ gradle.projectsEvaluated {
 }
 //Detekt task
 void addDetektTask(final Project project) {
-    ext.source = [project.android.sourceSets.main.java.srcDirs,
-            project.android.sourceSets.androidTest.java.srcDirs,
-            project.android.sourceSets.test.java.srcDirs,]
+    ext.source = ['main', 'androidTest', 'test'].collect {
+        project.android.sourceSets.findByName(it)
+    }.find { null != it }.collect { it.java.srcDirs }
     project.tasks.create([name:DETEKT, type:JavaExec, group:'verification']) {
         args '--input', 'src/main/java'
         args '--output', "${project.reportsDir.path}/$DETEKT"

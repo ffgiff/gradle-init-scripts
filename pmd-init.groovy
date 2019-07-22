@@ -14,9 +14,9 @@ gradle.projectsEvaluated {
             //PMD task
             task pmd(type:Pmd) {
                 ruleSets = rootProject.ext.ruleSets
-                source = [android.sourceSets.main.java.srcDirs,
-                          android.sourceSets.androidTest.java.srcDirs,
-                          android.sourceSets.test.java.srcDirs,]
+                source = ['main', 'androidTest', 'test'].collect {
+                    project.android.sourceSets.findByName(it)
+                }.find { null != it }.collect { it.java.srcDirs }
                 exclude '**/*.kt'
                 ignoreFailures = true // Don't report error if there are bugs found.
             }
