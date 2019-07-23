@@ -1,8 +1,10 @@
 projectsEvaluated {
     rootProject.subprojects {
-        task sourcesJar(type:Jar) {
-            classifier = 'sources'
-            from android.sourceSets.main.java.sourceFiles
+        if (it.hasProperty('android')) {
+            task sourcesJar(type:Jar) {
+                classifier = 'sources'
+                from android.sourceSets.main.javaDirectories
+            }
         }
     }
 }

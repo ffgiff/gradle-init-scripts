@@ -5,8 +5,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.pitest:pitest:1.3.2'
-        classpath 'org.pitest:pitest-command-line:1.3.2'
+        classpath 'org.pitest:pitest:1.4.9'
+        classpath 'org.pitest:pitest-command-line:1.4.9'
     }
 }
 
@@ -19,11 +19,8 @@ gradle.projectsEvaluated {
                 description 'Runs mutation tests using pitest tool.'
             }
             project.tasks.test.dependsOn.each { testTask ->
-                if (testTask.metaClass.respondsTo(testTask, 'startsWith') &&
-                        testTask.startsWith('test')) {
-                    addPitestTask(project, testTask)
-                    project.pitest.dependsOn += [project.tasks."pi$testTask"]
-                }
+                addPitestTask(project, testTask.name)
+                project.pitest.dependsOn += [project.tasks."pi${testTask.name}"]
             }
         }
     }
