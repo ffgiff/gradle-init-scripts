@@ -59,7 +59,7 @@ FileCollection getDebugSources(final Project project) {
         if (project.android.hasProperty(variantType)) {
             project.android."${variantType}".all { variant ->
                 if (variant.buildType.name == 'debug') {
-                    classes += fileTree(dir:"${variant.javaCompile.destinationDir}", excludes:FILE_FILTER)
+                    classes += fileTree(dir:"${variant.javaCompileProvider.get().destinationDir}", excludes:FILE_FILTER)
                 }
             }
         }

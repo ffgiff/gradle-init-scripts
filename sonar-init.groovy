@@ -1,5 +1,6 @@
 import org.gradle.api.Project
 import org.gradle.api.Task
+import org.gradle.api.file.ConfigurableFileCollection
 
 rootProject {
     buildscript {
@@ -50,10 +51,12 @@ void setApplicationProperties(final Project project) {
             property 'sonar.sources', project.android.sourceSets.main.java.srcDirs
             if (project.android.hasProperty('applicationVariants')) {
                 project.android.applicationVariants.all { variant ->
-                    property 'sonar.java.binaries', files(variant.javaCompile.destinationDir) +
+                    final ConfigurableFileCollection JAVA_CLASSES =
+                            files(variant.javaCompileProvider.get().destinationDir)
+                    property 'sonar.java.binaries', JAVA_CLASSES +
                             file("${project.buildDir}/tmp/kotlin-classes/${variant.name}")
                     property 'sonar.java.libraries',
-                            variant.javaCompile.classpath + files(project.android.bootClasspath)
+                            JAVA_CLASSES + files(project.android.bootClasspath)
                     final String VARIANT_NAME = variant.name[0].toUpperCase() + variant.name[1..-1]
                     final Task DEVICE_TEST_TASK =
                             project.tasks.findByName("connected${VARIANT_NAME}AndroidTest")
@@ -85,9 +88,10 @@ void setTestProperties(final Project project) {
     if (project.android.hasProperty('testVariants')) {
         project.sonarqube.properties {
             project.android.testVariants.all { variant ->
-                property 'sonar.java.test.binaries', variant.javaCompile.destinationDir
-                property 'sonar.java.test.libraries',
-                        variant.javaCompile.classpath + files(project.android.bootClasspath)
+                final ConfigurableFileCollection JAVA_CLASSES =
+                        files(variant.javaCompileProvider.get().destinationDir)
+                property 'sonar.java.test.binaries', JAVA_CLASSES
+                property 'sonar.java.test.libraries', JAVA_CLASSES + files(project.android.bootClasspath)
             }
         }
     }
