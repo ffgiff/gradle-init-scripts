@@ -57,13 +57,13 @@ final class JavadocHelper {
         FileCollection classpath = project.files()
         project.android."${variantType}".all { variant ->
             if (variant.buildType.name == 'release') {
-                classpath += project.files("${variant.javaCompile.destinationDir}")
+                classpath += project.files("${variant.javaCompileProvider.get().destinationDir}")
                 if ("${variantType}" == APP_VARIANTS) {
                     variant.getCompileClasspath(null).each { lib ->
                         classpath += project.files(lib)
                     }
                 } else if ("${variantType}" == LIB_VARIANTS) {
-                    classpath += variant.javaCompile.classpath
+                    classpath += variant.javaCompileProvider.get().classpath
                 }
             }
         }

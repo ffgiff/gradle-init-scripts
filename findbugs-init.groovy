@@ -74,7 +74,7 @@ FileCollection getDebugSources(final Project project) {
         if (project.android.hasProperty(variantType)) {
             project.android."${variantType}".all { variant ->
                 if (variant.buildType.name == 'debug') {
-                    classes += files("${variant.javaCompile.destinationDir}")
+                    classes += files("${variant.javaCompileProvider.get().destinationDir}")
                 }
             }
         }

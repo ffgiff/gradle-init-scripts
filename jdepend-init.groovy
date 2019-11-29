@@ -32,7 +32,7 @@ void addJdependTask(final Project project) {
             if (project.android.hasProperty(variantType)) {
                 project.android."${variantType}".all { variant ->
                     if (variant.buildType.name == 'release') {
-                        classesDir file("${variant.javaCompile.destinationDir}")
+                        classesDir file("${variant.javaCompileProvider.get().destinationDir}")
                     }
                 }
             }
