@@ -1,6 +1,6 @@
 apply from:'checkstyle-init.groovy'
 apply from:'detekt-init.groovy'
-apply from:'findbugs-init.groovy'
 apply from:'ktlint-init.groovy'
 apply from:'pmd-init.groovy'
 apply from:'sonar-init.groovy'
+apply from:'spotbugs-init.groovy'
