@@ -20,7 +20,16 @@ gradle.projectsEvaluated {
     }
 }
 
-//Findbugs task
+/**
+ * Findbugs task.
+ * @deprecated
+ * Deprecated in favour of spotbugs, see
+ * https://github.com/gradle/gradle/issues/7028.
+ * Will be removed when latest Android Gradle plug-in requires a
+ * version of Gradle that does not support findbugs.
+ * @param project Project to which a findbugs task will be added.
+ */
+@Deprecated
 void addFindBugsTask(final Project project) {
     project.apply plugin:FINDBUGS
     project.tasks.create([name:FINDBUGS,
